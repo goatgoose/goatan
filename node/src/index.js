@@ -43,7 +43,7 @@ function assert(condition, message) {
 }
 
 class Tile {
-    size = 363;
+    size = 370;
 
     texture_prefix = "/static/assets/catan";
     texture_map = {
@@ -67,7 +67,7 @@ class Tile {
         this.mask = new Graphics();
         this.mask.beginFill(0xffffff);
         //this.mask.drawRoundedPolygon(0, 0, 210, 6, 4)
-        this.mask.drawRegularPolygon(0, 0, 210, 6);
+        this.mask.drawRegularPolygon(0, 0, 214, 6);
         this.mask.endFill();
 
         this.container = new PIXI.Container();
