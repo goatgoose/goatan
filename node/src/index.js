@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
-import { Graphics } from '@pixi/graphics';
+import {Graphics} from '@pixi/graphics';
 import '@pixi/graphics-extras';
-import { Viewport } from 'pixi-viewport'
+import {Viewport} from 'pixi-viewport'
 
 let canvas_container = document.getElementById("canvas-container");
 
@@ -29,15 +29,37 @@ viewport
     .wheel()
     .decelerate()
 
-let wheat_tile = PIXI.Sprite.from("/static/assets/catan/tile_grain-resources.assets-684.png");
-let mask = new Graphics();
-mask.beginFill(0xffffff);
-mask.drawRoundedPolygon(255, 255, 210, 6, 10)
-mask.endFill();
-viewport.addChild(mask);
 
-let container = new PIXI.Container();
-container.mask = mask;
-container.addChild(wheat_tile);
-container.position.set(0, 0);
-viewport.addChild(container);
+class Tile {
+    constructor(viewport, type) {
+        this.viewport = viewport;
+        this.type = type;
+
+        this.sprite = PIXI.Sprite.from("/static/assets/catan/tile_grain-resources.assets-684.png");
+        this.sprite.anchor.set(0.5);
+
+        this.mask = new Graphics();
+        this.mask.beginFill(0xffffff);
+        this.mask.drawRoundedPolygon(0, 0, 210, 6, 10)
+        this.mask.endFill();
+
+        this.container = new PIXI.Container();
+        this.container.mask = this.mask;
+        this.container.addChild(this.sprite);
+        this.container.position.set(0, 0);
+    }
+
+    place(x, y) {
+        this.viewport.addChild(this.mask);
+        this.viewport.addChild(this.container);
+
+        this.mask.position.set(x, y);
+        this.container.position.set(x, y);
+    }
+}
+
+let tile1 = new Tile(viewport, "wheat");
+tile1.place(0, 0);
+
+let tile2 = new Tile(viewport, "wheat");
+tile2.place(500, 500);
