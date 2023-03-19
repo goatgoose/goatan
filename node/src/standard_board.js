@@ -1,3 +1,12 @@
+export let standard_tile_set = [
+    "clay", "clay", "clay",
+    "ore", "ore", "ore",
+    "wheat", "wheat", "wheat", "wheat",
+    "sheep", "sheep", "sheep", "sheep",
+    "wood", "wood", "wood", "wood",
+    "desert"
+]
+
 export let standard_board_definition = {
     0: {
         neighbors: {

@@ -2,8 +2,9 @@ import * as PIXI from 'pixi.js'
 import {Graphics} from '@pixi/graphics';
 import '@pixi/graphics-extras';
 import {Viewport} from 'pixi-viewport'
+import arrayShuffle from 'array-shuffle'
 
-import {standard_board_definition} from './standard_board'
+import {standard_board_definition, standard_tile_set} from './standard_board'
 
 let canvas_container = document.getElementById("canvas-container");
 
@@ -31,16 +32,36 @@ viewport
     .wheel()
     .decelerate()
 
+function assert(condition, message) {
+    if (!condition) {
+        if (message) {
+            throw message;
+        } else {
+            throw "Assertion failed";
+        }
+    }
+}
+
 class Tile {
     size = 363;
 
-    texture_
+    texture_prefix = "/static/assets/catan";
+    texture_map = {
+        "clay": this.texture_prefix + "/tile_brick-resources.assets-408.png",
+        "desert": this.texture_prefix + "/tile_desert-resources.assets-494.png",
+        "wheat": this.texture_prefix + "/tile_grain-resources.assets-1014.png",
+        "wood": this.texture_prefix + "/tile_lumber-resources.assets-1336.png",
+        "ore": this.texture_prefix + "/tile_ore-resources.assets-1349.png",
+        "water": this.texture_prefix + "/tile_water-resources.assets-1219.png",
+        "sheep": this.texture_prefix + "/tile_wool-resources.assets-418.png"
+    }
 
     constructor(viewport, type) {
         this.viewport = viewport;
         this.type = type;
 
-        this.sprite = PIXI.Sprite.from("/static/assets/catan/tile_grain-resources.assets-684.png");
+        assert(type in this.texture_map);
+        this.sprite = PIXI.Sprite.from(this.texture_map[type]);
         this.sprite.anchor.set(0.5);
 
         this.mask = new Graphics();
@@ -90,6 +111,9 @@ class Tile {
                     x = from_x + (this.size / 2);
                     y = from_y - (this.size * 7 / 8) + 3
                     break;
+                default:
+                    assert(false);
+                    break;
             }
         }
 
@@ -98,27 +122,32 @@ class Tile {
     }
 }
 
-let board = standard_board_definition;
-let start_tile = new Tile(viewport, "wheat");
-start_tile.place(null, null);
-let tiles = {
-    0: start_tile
-}
+function create_board(board, tile_set) {
+    tile_set = arrayShuffle([...tile_set]);
 
-let tile_idx_queue = [0]
-while (tile_idx_queue.length > 0) {
-    let current_idx = tile_idx_queue.shift();
-    let current_tile = tiles[current_idx];
+    let start_tile = new Tile(viewport, tile_set.pop());
+    start_tile.place(null, null);
+    let tiles = {
+        0: start_tile
+    }
 
-    let tile_definition = board[current_idx];
-    for (let side in tile_definition.neighbors) {
-        let neighbor_idx = tile_definition.neighbors[side];
-        if (!(neighbor_idx in tiles)) {
-            tile_idx_queue.push(neighbor_idx);
+    let tile_idx_queue = [0]
+    while (tile_idx_queue.length > 0) {
+        let current_idx = tile_idx_queue.shift();
+        let current_tile = tiles[current_idx];
 
-            let new_tile = new Tile(viewport, "wheat");
-            new_tile.place(current_tile, side);
-            tiles[neighbor_idx] = new_tile;
+        let tile_definition = board[current_idx];
+        for (let side in tile_definition.neighbors) {
+            let neighbor_idx = tile_definition.neighbors[side];
+            if (!(neighbor_idx in tiles)) {
+                tile_idx_queue.push(neighbor_idx);
+
+                let new_tile = new Tile(viewport, tile_set.pop());
+                new_tile.place(current_tile, side);
+                tiles[neighbor_idx] = new_tile;
+            }
         }
     }
 }
+
+create_board(standard_board_definition, standard_tile_set);
