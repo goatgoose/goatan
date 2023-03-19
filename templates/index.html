@@ -1,42 +1,41 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Hello World</title>
+    <meta charset="UTF-8">
+    <title>Goatan</title>
 
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/catan.css" rel="stylesheet">
 </head>
 <body>
 <script src="/static/scripts/bootstrap.bundle.min.js"></script>
-<script src="/static/scripts/util.js"></script>
 
-<div id="ui-container" class="d-flex" style="height: 100vh;">
-    <div id="canvas-container" class="flex-grow-1"></div>
-    <div class="bg-white" style="width: 200px;">
-        <a href="/" class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
-            <span class="fs-5 fw-bold">Goatan</span>
+<div class="col-lg-8 mx-auto p-4 py-md-5">
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+            <img src="/static/assets/catan/AppIcon72-resources.assets-529.png">
+            <span class="fs-4 ms-2">Goatan</span>
         </a>
-        <div class="list-group list-group-flush border-bottom scrollarea">
-            <a href="#" class="list-group-item list-group-item-action active py-3 lh-sm" aria-current="true">
-                <div class="d-flex w-100 align-items-center justify-content-between">
-                    <strong class="mb-1">List group item heading</strong>
-                    <small>Wed</small>
-                </div>
-                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
-                <div class="d-flex w-100 align-items-center justify-content-between">
-                    <strong class="mb-1">List group item heading</strong>
-                    <small class="text-muted">Tues</small>
-                </div>
-                <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-            </a>
-        </div>
-    </div>
-</div>
+    </header>
 
-<script src="/static/scripts/main.js"></script>
+    <main>
+        <h1>Create a new game</h1>
+        <p class="fs-5 col-md-8">Create a new game with a sharable link.</p>
+
+        <div class="mb-5">
+            <a href="/play" class="btn btn-primary btn-lg px-4">Create Game</a>
+        </div>
+
+        <hr class="col-3 col-md-2 mb-5">
+
+        <h1>Join a game</h1>
+        <p class="fs-5 col-md-8">Enter a game code to join.</p>
+
+    </main>
+    <footer class="pt-5 my-5 text-muted border-top">
+        goatgoose
+    </footer>
+</div>
 
 </body>
 </html>
