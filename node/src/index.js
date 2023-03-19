@@ -3,6 +3,8 @@ import {Graphics} from '@pixi/graphics';
 import '@pixi/graphics-extras';
 import {Viewport} from 'pixi-viewport'
 
+import {standard_board_definition} from './standard_board'
+
 let canvas_container = document.getElementById("canvas-container");
 
 const app = new PIXI.Application();
@@ -31,6 +33,8 @@ viewport
 
 class Tile {
     size = 363;
+
+    texture_
 
     constructor(viewport, type) {
         this.viewport = viewport;
@@ -62,27 +66,27 @@ class Tile {
             let from_y = from_tile.container.position.y;
 
             switch (side) {
-                case 0:
+                case '0':
                     x = from_x + this.size;
                     y = from_y;
                     break;
-                case 1:
+                case '1':
                     x = from_x + (this.size / 2);
                     y = from_y + (this.size * 7 / 8) - 3;
                     break;
-                case 2:
+                case '2':
                     x = from_x - (this.size / 2);
                     y = from_y + (this.size * 7 / 8) - 3;
                     break;
-                case 3:
+                case '3':
                     x = from_x - this.size;
                     y = from_y;
                     break;
-                case 4:
+                case '4':
                     x = from_x - (this.size / 2);
                     y = from_y - (this.size * 7 / 8) + 3;
                     break;
-                case 5:
+                case '5':
                     x = from_x + (this.size / 2);
                     y = from_y - (this.size * 7 / 8) + 3
                     break;
@@ -94,23 +98,27 @@ class Tile {
     }
 }
 
-let base_tile = new Tile(viewport, "wheat");
-base_tile.place(null, null);
+let board = standard_board_definition;
+let start_tile = new Tile(viewport, "wheat");
+start_tile.place(null, null);
+let tiles = {
+    0: start_tile
+}
 
-let tile0 = new Tile(viewport, "wheat");
-tile0.place(base_tile, 0);
+let tile_idx_queue = [0]
+while (tile_idx_queue.length > 0) {
+    let current_idx = tile_idx_queue.shift();
+    let current_tile = tiles[current_idx];
 
-let tile1 = new Tile(viewport, "wheat");
-tile1.place(base_tile, 1);
+    let tile_definition = board[current_idx];
+    for (let side in tile_definition.neighbors) {
+        let neighbor_idx = tile_definition.neighbors[side];
+        if (!(neighbor_idx in tiles)) {
+            tile_idx_queue.push(neighbor_idx);
 
-let tile2 = new Tile(viewport, "wheat");
-tile2.place(base_tile, 2);
-
-let tile3 = new Tile(viewport, "wheat");
-tile3.place(base_tile, 3);
-
-let tile4 = new Tile(viewport, "wheat");
-tile4.place(base_tile, 4);
-
-let tile5 = new Tile(viewport, "wheat");
-tile5.place(base_tile, 5);
+            let new_tile = new Tile(viewport, "wheat");
+            new_tile.place(current_tile, side);
+            tiles[neighbor_idx] = new_tile;
+        }
+    }
+}
