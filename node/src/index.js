@@ -41,7 +41,8 @@ class Tile {
 
         this.mask = new Graphics();
         this.mask.beginFill(0xffffff);
-        this.mask.drawRoundedPolygon(0, 0, 210, 6, 4)
+        //this.mask.drawRoundedPolygon(0, 0, 210, 6, 4)
+        this.mask.drawRegularPolygon(0, 0, 210, 6);
         this.mask.endFill();
 
         this.container = new PIXI.Container();
@@ -60,9 +61,31 @@ class Tile {
             let from_x = from_tile.container.position.x;
             let from_y = from_tile.container.position.y;
 
-            if (side === 1) {
-                x = from_x + this.size;
-                y = from_y;
+            switch (side) {
+                case 0:
+                    x = from_x + this.size;
+                    y = from_y;
+                    break;
+                case 1:
+                    x = from_x + (this.size / 2);
+                    y = from_y + (this.size * 7 / 8) - 3;
+                    break;
+                case 2:
+                    x = from_x - (this.size / 2);
+                    y = from_y + (this.size * 7 / 8) - 3;
+                    break;
+                case 3:
+                    x = from_x - this.size;
+                    y = from_y;
+                    break;
+                case 4:
+                    x = from_x - (this.size / 2);
+                    y = from_y - (this.size * 7 / 8) + 3;
+                    break;
+                case 5:
+                    x = from_x + (this.size / 2);
+                    y = from_y - (this.size * 7 / 8) + 3
+                    break;
             }
         }
 
@@ -71,8 +94,23 @@ class Tile {
     }
 }
 
+let base_tile = new Tile(viewport, "wheat");
+base_tile.place(null, null);
+
+let tile0 = new Tile(viewport, "wheat");
+tile0.place(base_tile, 0);
+
 let tile1 = new Tile(viewport, "wheat");
-tile1.place(null, null);
+tile1.place(base_tile, 1);
 
 let tile2 = new Tile(viewport, "wheat");
-tile2.place(tile1, 1);
+tile2.place(base_tile, 2);
+
+let tile3 = new Tile(viewport, "wheat");
+tile3.place(base_tile, 3);
+
+let tile4 = new Tile(viewport, "wheat");
+tile4.place(base_tile, 4);
+
+let tile5 = new Tile(viewport, "wheat");
+tile5.place(base_tile, 5);
