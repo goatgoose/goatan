@@ -10,10 +10,10 @@
 <body>
 <script src="/static/scripts/bootstrap.bundle.min.js"></script>
 <script src="/static/scripts/util.js"></script>
-<script src="/static/scripts/main.js"></script>
 
-<div id="ui-container" class="position-relative">
-    <div class="position-absolute top-50 end-0 translate-middle-y bg-white" style="width: 200px;">
+<div id="ui-container" class="d-flex" style="height: 100vh;">
+    <div id="canvas-container" class="flex-grow-1"></div>
+    <div class="bg-white" style="width: 200px;">
         <a href="/" class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
             <span class="fs-5 fw-semibold">List group</span>
         </a>
@@ -36,6 +36,7 @@
     </div>
 </div>
 
+<script src="/static/scripts/main.js"></script>
 
 </body>
 </html>

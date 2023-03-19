@@ -4,11 +4,13 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@pixi/graphics": "^7.2.1",
     "@pixi/graphics-extras": "^7.2.1",
     "pixi-viewport": "^5.0.1",
     "pixi.js": "^7.2.1",
