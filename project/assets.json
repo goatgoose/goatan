@@ -1,0 +1,236 @@
+{
+    "frames": {
+        "road-flat.png": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 2
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 2
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 2
+            }
+        },
+        "road-right.png": {
+            "frame": {
+                "x": 7,
+                "y": 0,
+                "w": 5,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 5,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 5,
+                "h": 6
+            }
+        },
+        "road-left.png": {
+            "frame": {
+                "x": 12,
+                "y": 0,
+                "w": 5,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 5,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 5,
+                "h": 6
+            }
+        },
+        "city.png": {
+            "frame": {
+                "x": 17,
+                "y": 0,
+                "w": 4,
+                "h": 5
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 4,
+                "h": 5
+            },
+            "sourceSize": {
+                "w": 4,
+                "h": 5
+            }
+        },
+        "house.png": {
+            "frame": {
+                "x": 21,
+                "y": 0,
+                "w": 4,
+                "h": 3
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 4,
+                "h": 3
+            },
+            "sourceSize": {
+                "w": 4,
+                "h": 3
+            }
+        },
+        "desert.png": {
+            "frame": {
+                "x": 25,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "sourceSize": {
+                "w": 33,
+                "h": 28
+            }
+        },
+        "sheep.png": {
+            "frame": {
+                "x": 58,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "sourceSize": {
+                "w": 33,
+                "h": 28
+            }
+        },
+        "brick.png": {
+            "frame": {
+                "x": 91,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "sourceSize": {
+                "w": 33,
+                "h": 28
+            }
+        },
+        "wood.png": {
+            "frame": {
+                "x": 124,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "sourceSize": {
+                "w": 33,
+                "h": 28
+            }
+        },
+        "stone.png": {
+            "frame": {
+                "x": 157,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "sourceSize": {
+                "w": 33,
+                "h": 28
+            }
+        },
+        "wheat.png": {
+            "frame": {
+                "x": 190,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 33,
+                "h": 28
+            },
+            "sourceSize": {
+                "w": 33,
+                "h": 28
+            }
+        }
+    },
+    "meta": {
+        "app": "https://www.codeandweb.com/texturepacker",
+        "version": "1.1",
+        "image": "assets.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 223,
+            "h": 28
+        },
+        "scale": "1",
+        "smartupdate": "$TexturePacker:SmartUpdate:1a68a53c750a1486202c313a39138fff:b43088c02a6f1dcc95a4274b3e9fdbd4:a759b6bbc8381ac9c472b28f589ad0d6$"
+    }
+}
