@@ -3,6 +3,7 @@ __pycache__
 static/scripts/bootstrap.bundle.min.js
 static/scripts/main.js*
 static/css/bootstrap.min.css
+static/images
 node/node_modules
 node/package-lock.json
 project/assets
