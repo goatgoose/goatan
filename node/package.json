@@ -1,6 +1,6 @@
 {
-  "name": "catan",
-  "version": "1.0.0",
+  "name": "goatan",
+  "version": "0.0.1",
   "description": "",
   "private": true,
   "scripts": {
@@ -8,7 +8,6 @@
     "build": "webpack"
   },
   "author": "",
-  "license": "ISC",
   "dependencies": {
     "@pixi/graphics": "^7.2.1",
     "@pixi/graphics-extras": "^7.2.1",

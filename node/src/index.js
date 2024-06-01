@@ -47,6 +47,11 @@ viewport.moveCenter(WORLD_WIDTH / 2, WORLD_HEIGHT / 2);
 let spritesheet = await PIXI.Assets.load("/static/images/assets.json");
 
 class Tile {
+    width = 33;
+    height = 28;
+    horizontal_width = 17;
+    edge_width = (this.width - this.horizontal_width) / 2;
+
     constructor(viewport, type) {
         this.viewport = viewport;
         this.type = type;
@@ -57,9 +62,30 @@ class Tile {
 
     place(x, y) {
         this.viewport.addChild(this.sprite);
-        this.sprite.position.set(0, 0);
+
+        let x_pos = 0;
+        let y_pos = 0;
+        if (y % 2 === 0) {
+            x_pos = x * (this.width + this.horizontal_width);
+            y_pos = y * (this.height / 2);
+        } else {
+            y = y / 2;
+
+            let x_offset = this.horizontal_width + this.edge_width;
+            let y_offset = 0;
+
+            x_pos = -x_offset + (x * (this.width + this.horizontal_width));
+            y_pos = y_offset + (y * this.height);
+        }
+
+        // pixi y-axis is inverted
+        y_pos *= -1;
+
+        this.sprite.position.set(x_pos, y_pos);
     }
 }
 
-let tile = new Tile(viewport, "sheep");
-tile.place(0, 0);
+for (let tile_def of standard_board_definition) {
+    let tile = new Tile(viewport, tile_def.type);
+    tile.place(tile_def.x, tile_def.y);
+}
