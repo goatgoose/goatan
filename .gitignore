@@ -5,3 +5,5 @@ static/scripts/main.js*
 static/css/bootstrap.min.css
 node/node_modules
 project/assets
+.DS_Store
+

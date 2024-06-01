@@ -12,9 +12,10 @@
   "dependencies": {
     "@pixi/graphics": "^7.2.1",
     "@pixi/graphics-extras": "^7.2.1",
+    "array-shuffle": "^3.0.0",
     "pixi-viewport": "^5.0.1",
     "pixi.js": "^7.2.1",
-    "webpack": "^5.76.2",
+    "webpack": "^5.91.0",
     "webpack-cli": "^5.0.1"
   }
 }
