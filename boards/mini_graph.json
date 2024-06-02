@@ -1,0 +1,72 @@
+{
+  "tiles": {
+    "tile-0": {
+      "type": "desert",
+      "edges": {
+        "north": "edge-0",
+        "north-east": "edge-1",
+        "south-east": "edge-2",
+        "south": "edge-3",
+        "south-west": "edge-4",
+        "north-west": "edge-5"
+      },
+      "intersections": {
+        "north": "intersections-0",
+        "north-east": "intersection-1",
+        "south-east": "intersection-2",
+        "south": "intersection-3",
+        "south-west": "intersection-4",
+        "north-west": "intersection-5"
+      }
+    },
+    "tile-1": {
+      "type": "sheep",
+      "edges": {
+        "north": "edge-6",
+        "north-east": "edge-7",
+        "south-east": "edge-8",
+        "south": "edge-0",
+        "south-west": "edge-9",
+        "north-west": "edge-10"
+      },
+      "intersections": {
+        "north": "intersection-6",
+        "north-east": "intersection-7",
+        "south-east": "intersection-0",
+        "south": "intersection-5",
+        "south-west": "intersection-8",
+        "north-west": "intersection-9"
+      }
+    },
+    "tile-2": {
+      "type": "wood",
+      "edges": {
+        "north": "edge-11",
+        "north-east": "edge-12",
+        "south-east": "edge-13",
+        "south": "edge-14",
+        "south-west": "edge-1",
+        "north-west": "edge-8"
+      },
+      "intersections": {
+        "north": "intersection-10",
+        "north-east": "intersection-11",
+        "south-east": "intersection-12",
+        "south": "intersection-1",
+        "south-west": "intersection-0",
+        "north-west": "intersection-7"
+      }
+    }
+  },
+  "edges": {
+    "edge-0": {
+      "right": "tile-0",
+      "left": "tile-1",
+      "front": "intersection-0",
+      "back": "intersection-5"
+    }
+  },
+  "intersections": {
+
+  }
+}
