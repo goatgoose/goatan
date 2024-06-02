@@ -1,3 +1,5 @@
+import logging
+
 import flask
 from flask import Flask, render_template, redirect, request, make_response
 from game import Goatan, Player
@@ -13,14 +15,17 @@ def base():
     return render_template("index.html")
 
 
-@app.route("/play")
-@app.route("/play/<game_id>")
-def play(game_id=None):
-    if game_id is None:
-        goatan = Goatan()
-        game_id = goatan.id
-        games[game_id] = goatan
+@app.route("/game/create")
+def create_game():
+    goatan = Goatan()
+    game_id = goatan.id
+    games[game_id] = goatan
 
+    return redirect(f"/play/{game_id}")
+
+
+@app.route("/play/<game_id>")
+def play(game_id):
     if game_id not in games:
         return f"Game not found: {game_id}", 400
     game = games[game_id]
@@ -52,14 +57,19 @@ def stream(game_id):
     if not player:
         return f"Player not found: {player_id}", 400
 
+    game.activate_player(player_id)
+
     def stream_message_queue():
-        message_queue = player.message_queue
-        while True:
-            message = message_queue.get()
-            yield message
+        try:
+            message_queue = player.message_queue
+            while True:
+                message = message_queue.get()
+                yield message
+        except GeneratorExit:
+            print("stream closed")
 
     return flask.Response(stream_message_queue(), mimetype="text/event-stream")
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=8000, debug=True)

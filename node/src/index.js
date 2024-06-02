@@ -91,3 +91,13 @@ for (let tile_def of standard_board_definition) {
 }
 
 console.log("game id: " + game_id);
+console.log(document.cookie);
+
+let event_source = new EventSource("/stream/" + game_id);
+event_source.onmessage = function(event) {
+    console.log(event);
+}
+event_source.onerror = function(event) {
+    console.log("error");
+    console.log(event);
+}
