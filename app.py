@@ -2,9 +2,11 @@ import logging
 
 import flask
 from flask import Flask, render_template, redirect, request, make_response
+from flask_socketio import SocketIO, emit
 from game import Goatan, Player
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
 
 games: dict[str, Goatan] = {}  # id : game
@@ -43,33 +45,11 @@ def play(game_id):
     return response
 
 
-@app.route("/stream/<game_id>")
-def stream(game_id):
-    game = games.get(game_id)
-    if game_id not in games:
-        return f"Game not found: {game_id}", 400
-
-    player_id = request.cookies.get("player_id")
-    if not player_id:
-        return f"Player not found: {player_id}", 400
-
-    player = game.players.get(player_id)
-    if not player:
-        return f"Player not found: {player_id}", 400
-
-    game.activate_player(player_id)
-
-    def stream_message_queue():
-        try:
-            message_queue = player.message_queue
-            while True:
-                message = message_queue.get()
-                yield message
-        except GeneratorExit:
-            print("stream closed")
-
-    return flask.Response(stream_message_queue(), mimetype="text/event-stream")
+@socketio.on("connect")
+def handle_connect():
+    print("Client connected")
+    emit("response", {"data": "Connected"})
 
 
 if __name__ == '__main__':
-    app.run(port=8000, debug=True)
+    socketio.run(app, port=8000, debug=True, allow_unsafe_werkzeug=True)

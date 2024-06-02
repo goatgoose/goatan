@@ -3,6 +3,8 @@ import {Graphics} from '@pixi/graphics';
 import '@pixi/graphics-extras';
 import {Viewport} from 'pixi-viewport'
 import arrayShuffle from 'array-shuffle'
+import Cookies from 'js-cookie'
+import { io } from "socket.io-client"
 
 import {standard_board_definition, standard_tile_set} from './standard_board'
 import {Assets, Loader, Sprite, Spritesheet, Texture} from "pixi.js";
@@ -91,13 +93,10 @@ for (let tile_def of standard_board_definition) {
 }
 
 console.log("game id: " + game_id);
-console.log(document.cookie);
+let player_id = await Cookies.get("player_id");
+console.log(player_id);
 
-let event_source = new EventSource("/stream/" + game_id);
-event_source.onmessage = function(event) {
-    console.log(event);
-}
-event_source.onerror = function(event) {
-    console.log("error");
-    console.log(event);
-}
+let socket = io("/");
+socket.on("connect", function() {
+    console.log("socket connect");
+});
