@@ -89,3 +89,5 @@ for (let tile_def of standard_board_definition) {
     let tile = new Tile(viewport, tile_def.type);
     tile.place(tile_def.x, tile_def.y);
 }
+
+console.log("game id: " + game_id);
