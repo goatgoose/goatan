@@ -1,9 +1,6 @@
-import logging
-
-import flask
 from flask import Flask, render_template, redirect, request, make_response
 from flask_socketio import SocketIO, emit
-from game import Goatan, Player
+from src.game import Goatan, Player
 
 app = Flask(__name__)
 socketio = SocketIO(app)

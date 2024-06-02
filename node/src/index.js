@@ -100,3 +100,6 @@ let socket = io("/");
 socket.on("connect", function() {
     console.log("socket connect");
 });
+socket.on("response", function(event) {
+    console.log(event);
+});
