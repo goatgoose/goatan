@@ -70,6 +70,11 @@ class Tile(BoardItem):
 
             yield tile
 
+    def serialize(self):
+        return {
+            "type": self.type.name
+        }
+
     def __str__(self):
         return self.id
 
@@ -162,8 +167,14 @@ class Board:
 
         return board
 
-    def to_json(self):
-        pass
+    def serialize(self):
+        return {
+            "tile_graph": {
+                tile.id: [neighbor.id for neighbor in tile.neighbors.values()]
+                for tile in self.tiles.values()
+            },
+            "tiles": {tile.id: tile.serialize() for tile in self.tiles.values()}
+        }
 
     def tile_graph(self):
         graph: Dict[Tile, List[Tile]] = {}
@@ -184,4 +195,4 @@ if __name__ == '__main__':
     board = Board.from_radius(2)
     print(board)
 
-    pprint.pprint(board.tile_graph())
+    pprint.pprint(board.serialize())
