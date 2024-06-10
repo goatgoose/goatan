@@ -54,6 +54,27 @@ class Tile(BoardItem):
 
         super().__init__()
 
+    def associate_neighbor(self, neighbor, side):
+        if self.neighbors.get(side) == neighbor:
+            return
+
+        assert self.neighbors.get(side) is None
+        self.neighbors[side] = neighbor
+
+    def associate_edge(self, edge, side):
+        if self.edges.get(side) == edge:
+            return
+
+        assert self.edges.get(side) is None
+        self.edges[side] = edge
+
+    def associate_intersection(self, intersection, side):
+        if self.intersections.get(side) == intersection:
+            return
+
+        assert self.intersections.get(side) is None
+        self.intersections[side] = intersection
+
     def bfs(self):
         visited = set()
         tiles = [self]
@@ -84,27 +105,46 @@ class Tile(BoardItem):
 
 class Intersection(BoardItem):
     def __init__(self):
+        self.tiles: Set[Tile] = set()
         self.edges: Set[Edge] = set()
 
         super().__init__()
+
+    def associate_tile(self, tile: Tile):
+        if tile in self.tiles:
+            return
+
+        assert len(self.tiles) < 3
+        self.tiles.add(tile)
+
+    def associate_edge(self, edge):
+        if edge in self.edges:
+            return
+
+        assert len(self.edges) < 3
+        self.edges.add(edge)
 
 
 class Edge(BoardItem):
     def __init__(self):
         self.tiles: Set[Tile] = set()
+        self.intersections: Set[Intersection] = set()
 
         super().__init__()
 
     def associate_tile(self, tile: Tile):
+        if tile in self.tiles:
+            return
+
         assert len(self.tiles) < 2
         self.tiles.add(tile)
 
-    def other_tile(self, tile: Tile):
-        assert tile in self.tiles
-        for other_tile in self.tiles:
-            if tile != other_tile:
-                return other_tile
-        return None
+    def associate_intersection(self, intersection: Intersection):
+        if intersection in self.intersections:
+            return
+
+        assert len(self.intersections) < 2
+        self.intersections.add(intersection)
 
 
 class Board:
@@ -116,6 +156,69 @@ class Board:
     @staticmethod
     def from_definition(definition: [dict]):
         pass
+
+    def _construct_edge_graph(self):
+        for tile in self.tiles.values():
+
+            # create new intersections
+            for side in TileSide:
+                if side in tile.intersections:
+                    continue
+
+                intersection = Intersection()
+                self.intersections[intersection.id] = intersection
+
+                # associate the new intersection with the tile
+                tile.intersections[side] = intersection
+                intersection.associate_tile(tile)
+
+                # if the tile has neighboring tiles, associate the new intersection with them too
+                neighbor_0_intersect_side, neighbor_1_intersect_side = {
+                    TileSide.NORTH: (TileSide.SOUTH_EAST, TileSide.SOUTH_WEST),
+                    TileSide.NORTH_EAST: (TileSide.SOUTH, TileSide.NORTH_WEST),
+                    TileSide.SOUTH_EAST: (TileSide.SOUTH_WEST, TileSide.NORTH),
+                    TileSide.SOUTH: (TileSide.NORTH_WEST, TileSide.NORTH_EAST),
+                    TileSide.SOUTH_WEST: (TileSide.NORTH, TileSide.SOUTH_EAST),
+                    TileSide.NORTH_WEST: (TileSide.NORTH_EAST, TileSide.SOUTH)
+                }.get(side)
+
+                neighbor_0 = tile.neighbors.get(side)
+                if neighbor_0 is not None:
+                    neighbor_0.associate_intersection(intersection, neighbor_0_intersect_side)
+                    intersection.associate_tile(neighbor_0)
+
+                neighbor_1 = tile.neighbors.get(TileSide.wrap(side.value + 1))
+                if neighbor_1 is not None:
+                    neighbor_1.associate_intersection(intersection, neighbor_1_intersect_side)
+                    intersection.associate_tile(neighbor_1)
+
+            # create new edges
+            for side in TileSide:
+                if side in tile.edges:
+                    continue
+
+                edge = Edge()
+                self.edges[edge.id] = edge
+
+                edge.associate_tile(tile)
+                tile.associate_edge(edge, side)
+
+                neighbor = tile.neighbors.get(side)
+                if neighbor is not None:
+                    edge.associate_tile(neighbor)
+                    neighbor.associate_edge(edge, TileSide.opposite(side))
+
+            # connect edges to intersections
+            for side in TileSide:
+                edge = tile.edges.get(side)
+                intersection = tile.intersections.get(side)
+
+                edge.associate_intersection(intersection)
+                intersection.associate_edge(edge)
+
+                previous_intersection = tile.intersections.get(TileSide.wrap(side.value - 1))
+                previous_intersection.associate_edge(edge)
+                edge.associate_intersection(previous_intersection)
 
     @staticmethod
     def from_radius(radius: int):
@@ -165,15 +268,28 @@ class Board:
                 tile_1.neighbors[tile_1_side] = tile_2
                 tile_2.neighbors[tile_2_side] = tile_1
 
+        board._construct_edge_graph()
+
         return board
 
     def serialize(self):
         return {
-            "tile_graph": {
-                tile.id: [neighbor.id for neighbor in tile.neighbors.values()]
-                for tile in self.tiles.values()
+            "tiles": {
+                tile.id: {
+                    "edges": {
+                        side.name: edge.id for side, edge in tile.edges.items()
+                    },
+                    "intersections": {
+                        side.name: intersection.id for side, intersection in tile.intersections.items()
+                    },
+                    "type": tile.type.name,
+                } for tile in self.tiles.values()
             },
-            "tiles": {tile.id: tile.serialize() for tile in self.tiles.values()}
+            "edges": {
+                edge.id: {
+                    "tiles": [tile.id for tile in edge.tiles]
+                } for edge in self.edges.values()
+            },
         }
 
     def tile_graph(self):
@@ -192,7 +308,7 @@ class Board:
 
 
 if __name__ == '__main__':
-    board = Board.from_radius(2)
+    board = Board.from_radius(3)
     print(board)
 
     pprint.pprint(board.serialize())
