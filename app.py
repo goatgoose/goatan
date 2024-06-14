@@ -9,6 +9,7 @@ socketio = SocketIO(app)
 
 players = PlayerManager()
 games = GameManager()
+
 namespace = GoatanNamespace(games)
 socketio.on_namespace(namespace)
 
@@ -33,10 +34,13 @@ def play(game_id):
     response = make_response(render_template("game.html", game_id=game_id))
 
     player_id = request.cookies.get("player_id")
-    if not player_id:
+    if player_id is None or players.get(player_id) is None:
         player = players.create_player()
-        game.register_player(player)
-        response.set_cookie("player_id", player.id)
+        player_id = player.id
+        response.set_cookie("player_id", player_id)
+
+    player = players.get(player_id)
+    game.register_player(player)
 
     return response
 

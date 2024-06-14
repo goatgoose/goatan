@@ -111,6 +111,6 @@ socket.on("connect", function(data) {
     console.log("socket connect");
     console.log(data);
 });
-socket.on("response", function(event) {
+socket.on("game_state", function(event) {
     console.log(event);
 });

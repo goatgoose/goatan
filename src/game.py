@@ -41,3 +41,8 @@ class Goatan(GameItem):
 
         self.players[player.id] = player
         print(f"Registered player {player.id} for {self.id}")
+
+    def serialize(self):
+        return {
+            "board": self.board.serialize(),
+        }
