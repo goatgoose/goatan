@@ -12,10 +12,10 @@ class GameManager:
     def __init__(self):
         self.games: Dict[str, Goatan] = {}
 
-    def create_game(self) -> str:
+    def create_game(self):
         game = Goatan()
         self.games[game.id] = game
-        return game.id
+        return game
 
     def get(self, id_: str):
         return self.games.get(id_)

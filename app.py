@@ -1,12 +1,13 @@
 from flask import Flask, render_template, redirect, request, make_response
 from flask_socketio import SocketIO, emit
-from src.game import Goatan, Player, GameManager
+from src.game import Goatan, GameManager
 from src.interface import GoatanNamespace
+from src.player import PlayerManager, Player
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-
+players = PlayerManager()
 games = GameManager()
 namespace = GoatanNamespace(games)
 socketio.on_namespace(namespace)
@@ -19,8 +20,8 @@ def base():
 
 @app.route("/game/create")
 def create_game():
-    game_id = games.create_game()
-    return redirect(f"/play/{game_id}")
+    game = games.create_game()
+    return redirect(f"/play/{game.id}")
 
 
 @app.route("/play/<game_id>")
@@ -33,10 +34,9 @@ def play(game_id):
 
     player_id = request.cookies.get("player_id")
     if not player_id:
-        player = Player()
+        player = players.create_player()
         game.register_player(player)
-        player_id = player.id
-        response.set_cookie("player_id", player_id)
+        response.set_cookie("player_id", player.id)
 
     return response
 
