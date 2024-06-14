@@ -1,12 +1,15 @@
 from flask import Flask, render_template, redirect, request, make_response
 from flask_socketio import SocketIO, emit
-from src.game import Goatan, Player
+from src.game import Goatan, Player, GameManager
+from src.interface import GoatanNamespace
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
 
-games: dict[str, Goatan] = {}  # id : game
+games = GameManager()
+namespace = GoatanNamespace(games)
+socketio.on_namespace(namespace)
 
 
 @app.route("/")
@@ -16,18 +19,15 @@ def base():
 
 @app.route("/game/create")
 def create_game():
-    goatan = Goatan()
-    game_id = goatan.id
-    games[game_id] = goatan
-
+    game_id = games.create_game()
     return redirect(f"/play/{game_id}")
 
 
 @app.route("/play/<game_id>")
 def play(game_id):
-    if game_id not in games:
+    game = games.get(game_id)
+    if game is None:
         return f"Game not found: {game_id}", 400
-    game = games[game_id]
 
     response = make_response(render_template("game.html", game_id=game_id))
 
@@ -40,12 +40,6 @@ def play(game_id):
         game.register_player(player_id)
 
     return response
-
-
-@socketio.on("connect")
-def handle_connect():
-    print("Client connected")
-    emit("response", {"data": "Connected"})
 
 
 if __name__ == '__main__':

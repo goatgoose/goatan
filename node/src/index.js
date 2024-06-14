@@ -87,18 +87,29 @@ class Tile {
     }
 }
 
-for (let tile_def of standard_board_definition) {
-    let tile = new Tile(viewport, tile_def.type);
-    tile.place(tile_def.x, tile_def.y);
+// for (let tile_def of standard_board_definition) {
+//     let tile = new Tile(viewport, tile_def.type);
+//     tile.place(tile_def.x, tile_def.y);
+// }
+
+function draw_board(board) {
+    console.log("draw board");
+    console.log(board);
 }
 
 console.log("game id: " + game_id);
 let player_id = await Cookies.get("player_id");
 console.log(player_id);
 
-let socket = io("/");
-socket.on("connect", function() {
+let socket = io("/goatan", {
+    auth: {
+        game: game_id,
+        player: player_id
+    }
+});
+socket.on("connect", function(data) {
     console.log("socket connect");
+    console.log(data);
 });
 socket.on("response", function(event) {
     console.log(event);

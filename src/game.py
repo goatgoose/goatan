@@ -1,6 +1,9 @@
 import string
 import random
 import queue
+from typing import Dict
+
+from src.board import Board
 
 
 def _generate_id():
@@ -26,10 +29,25 @@ class Player:
         return _generate_id()
 
 
+class GameManager:
+    def __init__(self):
+        self.games: Dict[str, Goatan] = {}
+
+    def create_game(self) -> str:
+        game = Goatan()
+        self.games[game.id] = game
+        return game.id
+
+    def get(self, id_: str):
+        return self.games.get(id_)
+
+
 class Goatan:
     def __init__(self):
         self.id = _generate_id()
         self.players = {}  # id : player
+
+        self.board = Board.from_radius(1)
 
     def _publish_event(self, event):
         for player in self.players.values():
@@ -44,10 +62,3 @@ class Goatan:
         player = Player(player_id)
         self.players[player_id] = player
         print(f"Registered player {player_id} for {self.id}")
-
-    def activate_player(self, player_id):
-        player = self.players.get(player_id)
-        assert player is not None
-
-        player.publish_event(f"activated player: {player_id}")
-        print(f"Player activated: {player_id}")
