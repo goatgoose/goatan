@@ -4,10 +4,7 @@ import uuid
 from abc import ABC
 import pprint
 
-
-class BoardItem(ABC):
-    def __init__(self):
-        self.id = str(uuid.uuid4())
+from src.util import GameItem
 
 
 class TileType(Enum):
@@ -44,7 +41,7 @@ class TileSide(Enum):
         return TileSide(side % len(TileSide))
 
 
-class Tile(BoardItem):
+class Tile(GameItem):
     def __init__(self, type_: TileType):
         self.type = type_
 
@@ -103,7 +100,7 @@ class Tile(BoardItem):
         return str(self)
 
 
-class Intersection(BoardItem):
+class Intersection(GameItem):
     def __init__(self):
         self.tiles: Set[Tile] = set()
         self.edges: Set[Edge] = set()
@@ -125,7 +122,7 @@ class Intersection(BoardItem):
         self.edges.add(edge)
 
 
-class Edge(BoardItem):
+class Edge(GameItem):
     def __init__(self):
         self.tiles: Set[Tile] = set()
         self.intersections: Set[Intersection] = set()

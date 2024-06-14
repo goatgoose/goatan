@@ -33,11 +33,10 @@ def play(game_id):
 
     player_id = request.cookies.get("player_id")
     if not player_id:
-        player_id = Player.generate_id()
+        player = Player()
+        game.register_player(player)
+        player_id = player.id
         response.set_cookie("player_id", player_id)
-
-    if player_id not in game.players:
-        game.register_player(player_id)
 
     return response
 
