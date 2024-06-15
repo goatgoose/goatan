@@ -5,7 +5,7 @@ from typing import Dict
 
 from src.board import Board
 from src.util import GameItem
-from src.player import Player
+from src.user import User
 
 
 class GameManager:
@@ -34,13 +34,6 @@ class Goatan(GameItem):
             random.choice(string.ascii_lowercase + string.digits)
             for _ in range(8)
         ])
-
-    def register_player(self, player: Player):
-        if player.id in self.players:
-            return
-
-        self.players[player.id] = player
-        print(f"Registered player {player.id} for {self.id}")
 
     def serialize(self):
         return {

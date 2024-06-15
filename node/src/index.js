@@ -98,13 +98,13 @@ function draw_board(board) {
 }
 
 console.log("game id: " + game_id);
-let player_id = await Cookies.get("player_id");
-console.log(player_id);
+let user_id = await Cookies.get("user_id");
+console.log(user_id);
 
 let socket = io("/goatan", {
     auth: {
         game: game_id,
-        player: player_id
+        user: user_id
     }
 });
 socket.on("connect", function(data) {

@@ -2,12 +2,12 @@ from flask import Flask, render_template, redirect, request, make_response
 from flask_socketio import SocketIO, emit
 from src.game import Goatan, GameManager
 from src.interface import GoatanNamespace
-from src.player import PlayerManager, Player
+from src.user import UserManager, User
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-players = PlayerManager()
+users = UserManager()
 games = GameManager()
 
 namespace = GoatanNamespace(games)
@@ -33,14 +33,11 @@ def play(game_id):
 
     response = make_response(render_template("game.html", game_id=game_id))
 
-    player_id = request.cookies.get("player_id")
-    if player_id is None or players.get(player_id) is None:
-        player = players.create_player()
-        player_id = player.id
-        response.set_cookie("player_id", player_id)
-
-    player = players.get(player_id)
-    game.register_player(player)
+    user_id = request.cookies.get("user_id")
+    if user_id is None or users.get(user_id) is None:
+        user = users.create_user()
+        user_id = user.id
+        response.set_cookie("user_id", user_id)
 
     return response
 
