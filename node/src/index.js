@@ -9,6 +9,16 @@ import { io } from "socket.io-client"
 import {standard_board_definition, standard_tile_set} from './standard_board'
 import {Assets, Loader, Sprite, Spritesheet, Texture} from "pixi.js";
 
+function assert(condition, message) {
+    if (!condition) {
+        if (message) {
+            throw new Error(message);
+        } else {
+            throw new Error("Assertion failed");
+        }
+    }
+}
+
 let canvas_container = document.getElementById("canvas-container");
 
 const app = new PIXI.Application();
@@ -48,6 +58,15 @@ viewport.moveCenter(WORLD_WIDTH / 2, WORLD_HEIGHT / 2);
 
 let spritesheet = await PIXI.Assets.load("/static/images/assets.json");
 
+const Side = Object.freeze({
+    NORTH: 0,
+    NORTH_EAST: 1,
+    SOUTH_EAST: 2,
+    SOUTH: 3,
+    SOUTH_WEST: 4,
+    NORTH_WEST: 5,
+});
+
 class Tile {
     width = 33;
     height = 28;
@@ -58,43 +77,100 @@ class Tile {
         this.viewport = viewport;
         this.type = type;
 
+        this.x_pos = 0;
+        this.y_pos = 0;
+
         let type_img = this.type + ".png";
         this.sprite = new Sprite(spritesheet.textures[type_img]);
     }
 
-    place(x, y) {
+    place(x_pos, y_pos) {
+        this.x_pos = x_pos;
+        this.y_pos = y_pos;
+
         this.viewport.addChild(this.sprite);
+        // pixi y-axis is inverted
+        this.sprite.position.set(this.x_pos, this.y_pos * -1);
+    }
 
-        let x_pos = 0;
-        let y_pos = 0;
-        if (y % 2 === 0) {
-            x_pos = x * (this.width + this.horizontal_width);
-            y_pos = y * (this.height / 2);
-        } else {
-            y = y / 2;
+    place_beside(tile, side) {
+        let x_pos = tile.x_pos;
+        let y_pos = tile.y_pos;
 
-            let x_offset = this.horizontal_width + this.edge_width;
-            let y_offset = 0;
-
-            x_pos = -x_offset + (x * (this.width + this.horizontal_width));
-            y_pos = y_offset + (y * this.height);
+        switch (side) {
+            case Side.NORTH:
+                y_pos += this.height;
+                break;
+            case Side.NORTH_EAST:
+                y_pos += this.height / 2;
+                x_pos += this.width - this.edge_width;
+                break;
+            case Side.SOUTH_EAST:
+                y_pos -= this.height / 2;
+                x_pos += this.width - this.edge_width;
+                break;
+            case Side.SOUTH:
+                y_pos -= this.height;
+                break;
+            case Side.SOUTH_WEST:
+                y_pos -= this.height / 2;
+                x_pos = x_pos - this.width + this.edge_width;
+                break;
+            case Side.NORTH_WEST:
+                y_pos += this.height / 2;
+                x_pos = x_pos - this.width + this.edge_width;
+                break;
         }
 
-        // pixi y-axis is inverted
-        y_pos *= -1;
-
-        this.sprite.position.set(x_pos, y_pos);
+        this.place(x_pos, y_pos);
     }
 }
 
-// for (let tile_def of standard_board_definition) {
-//     let tile = new Tile(viewport, tile_def.type);
-//     tile.place(tile_def.x, tile_def.y);
-// }
+let tiles = {};
+let edges = {};
+let intersections = {};
 
 function draw_board(board) {
     console.log("draw board");
     console.log(board);
+
+    let anchor_id = board["anchor_tile"];
+    let anchor = new Tile(viewport, "wood");
+    tiles[anchor_id] = anchor;
+    anchor.place(0, 0);
+
+    let tile_ids = [anchor_id];
+    while (tile_ids.length > 0) {
+        let tile_id = tile_ids.shift();
+        assert(tile_id in tiles);
+        let tile = tiles[tile_id];
+
+        let tile_def = board["tiles"][tile_id];
+        for (let [side_name, edge_id] of Object.entries(tile_def["edges"])) {
+            let edge_def = board["edges"][edge_id];
+
+            let neighbor_tile_id = undefined;
+            for (let edge_tile_id of edge_def["tiles"]) {
+                if (edge_tile_id !== tile_id) {
+                    neighbor_tile_id = edge_tile_id;
+                }
+            }
+
+            if (neighbor_tile_id === undefined) {
+                continue;
+            }
+            if (neighbor_tile_id in tiles) {
+                continue;
+            }
+
+            let neighbor = new Tile(viewport, "wood");
+            tiles[neighbor_tile_id] = neighbor;
+            tile_ids.push(neighbor_tile_id);
+
+            let side = Side[side_name];
+            neighbor.place_beside(tile, side);
+        }
+    }
 }
 
 console.log("game id: " + game_id);
@@ -111,5 +187,5 @@ socket.on("connect", function() {
     console.log("socket connect");
 });
 socket.on("game_state", function(event) {
-    console.log(event);
+    draw_board(event["board"]);
 });

@@ -27,7 +27,7 @@ class Goatan(GameItem):
         super().__init__()
 
         self.players = PlayerManager()
-        self.board = Board.from_radius(1)
+        self.board = Board.from_radius(2)
 
     @staticmethod
     def _generate_id():

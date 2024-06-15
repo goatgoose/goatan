@@ -146,6 +146,7 @@ class Edge(GameItem):
 
 class Board:
     def __init__(self):
+        self.anchor_tile = None
         self.tiles: Dict[str, Tile] = {}
         self.edges: Dict[str, Edge] = {}
         self.intersections: Dict[str, Intersection] = {}
@@ -266,6 +267,7 @@ class Board:
                 tile_2.neighbors[tile_2_side] = tile_1
 
         board._construct_edge_graph()
+        board.anchor_tile = center_tile
 
         return board
 
@@ -287,6 +289,7 @@ class Board:
                     "tiles": [tile.id for tile in edge.tiles]
                 } for edge in self.edges.values()
             },
+            "anchor_tile": self.anchor_tile.id,
         }
 
     def tile_graph(self):
