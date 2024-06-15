@@ -6,6 +6,7 @@ from typing import Dict
 from src.board import Board
 from src.util import GameItem
 from src.user import User
+from src.player import PlayerManager, Player
 
 
 class GameManager:
@@ -25,7 +26,7 @@ class Goatan(GameItem):
     def __init__(self):
         super().__init__()
 
-        self.players = {}  # id : player
+        self.players = PlayerManager()
         self.board = Board.from_radius(1)
 
     @staticmethod

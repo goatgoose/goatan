@@ -39,6 +39,9 @@ def play(game_id):
         user_id = user.id
         response.set_cookie("user_id", user_id)
 
+    user = users.get(user_id)
+    game.players.register_user(user)
+
     return response
 
 

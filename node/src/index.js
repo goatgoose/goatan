@@ -107,9 +107,8 @@ let socket = io("/goatan", {
         user: user_id
     }
 });
-socket.on("connect", function(data) {
+socket.on("connect", function() {
     console.log("socket connect");
-    console.log(data);
 });
 socket.on("game_state", function(event) {
     console.log(event);
