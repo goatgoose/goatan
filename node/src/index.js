@@ -44,8 +44,8 @@ const viewport = new Viewport({
     worldHeight: WORLD_HEIGHT,
 
     events: app.renderer.events
-})
-app.stage.addChild(viewport)
+});
+app.stage.addChild(viewport);
 
 viewport
     .drag()
@@ -68,38 +68,26 @@ const Side = Object.freeze({
 });
 
 class Tile {
-    width = 33;
-    height = 28;
-    horizontal_width = 17;
-    edge_width = (this.width - this.horizontal_width) / 2;
+    static width = 33;
+    static height = 28;
+    static horizontal_width = 17;
+    static edge_width = (Tile.width - Tile.horizontal_width) / 2;
 
-    constructor(viewport, type) {
+    constructor(viewport, x_pos, y_pos) {
         this.viewport = viewport;
-        this.type = type;
-
-        this.x_pos = 0;
-        this.y_pos = 0;
-
-        let type_img = this.type + ".png";
-        this.sprite = new Sprite(spritesheet.textures[type_img]);
-    }
-
-    place(x_pos, y_pos) {
         this.x_pos = x_pos;
         this.y_pos = y_pos;
 
-        this.viewport.addChild(this.sprite);
-        // pixi y-axis is inverted
-        this.sprite.position.set(this.x_pos, this.y_pos * -1);
+        this.sprite = undefined;
     }
 
-    place_beside(tile, side) {
-        let x_pos = tile.x_pos;
-        let y_pos = tile.y_pos;
+    static from_neighbor(viewport, neighbor, side) {
+        let x_pos = neighbor.x_pos;
+        let y_pos = neighbor.y_pos;
 
         switch (side) {
             case Side.NORTH:
-                y_pos += this.height;
+                y_pos += Tile.height;
                 break;
             case Side.NORTH_EAST:
                 y_pos += this.height / 2;
@@ -122,7 +110,23 @@ class Tile {
                 break;
         }
 
-        this.place(x_pos, y_pos);
+        return new Tile(viewport, x_pos, y_pos);
+    }
+
+    draw_resource(resource_type) {
+        if (this.sprite !== undefined) {
+            this.viewport.removeChild(this.sprite);
+        }
+
+        let type_img = resource_type + ".png";
+        this.sprite = new Sprite(spritesheet.textures[type_img]);
+        this.viewport.addChild(this.sprite);
+
+        let x_pos = this.x_pos;
+        // pixi y-axis is inverted
+        let y_pos = this.y_pos * -1;
+
+        this.sprite.position.set(x_pos, y_pos);
     }
 }
 
@@ -135,9 +139,9 @@ function draw_board(board) {
     console.log(board);
 
     let anchor_id = board["anchor_tile"];
-    let anchor = new Tile(viewport, "wood");
+    let anchor = new Tile(viewport, 0, 0);
     tiles[anchor_id] = anchor;
-    anchor.place(0, 0);
+    anchor.draw_resource("wood");
 
     let tile_ids = [anchor_id];
     while (tile_ids.length > 0) {
@@ -163,12 +167,11 @@ function draw_board(board) {
                 continue;
             }
 
-            let neighbor = new Tile(viewport, "wood");
+            let side = Side[side_name];
+            let neighbor = Tile.from_neighbor(viewport, tile, side);
             tiles[neighbor_tile_id] = neighbor;
             tile_ids.push(neighbor_tile_id);
-
-            let side = Side[side_name];
-            neighbor.place_beside(tile, side);
+            neighbor.draw_resource("wood");
         }
     }
 }
