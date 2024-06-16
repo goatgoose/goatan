@@ -28,6 +28,7 @@ app.renderer.view.style.position = "absolute";
 app.renderer.view.style.display = "block";
 //app.renderer.autoDensity = true;
 app.resizeTo = canvas_container;
+app.renderer.backgroundColor = 0x59c8ff;
 
 // https://github.com/loksland/pixel-art-game-test/blob/main/README.md
 PIXI.BaseTexture.defaultOptions.scaleMode = PIXI.SCALE_MODES.NEAREST;
