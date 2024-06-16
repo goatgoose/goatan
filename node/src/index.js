@@ -165,7 +165,6 @@ class Edge {
         switch (side) {
             case TileSide.NORTH:
                 x_pos += TILE_WIDTH / 2;
-                y_pos += 0;
                 break;
             case TileSide.NORTH_EAST:
                 x_pos += TILE_WIDTH - (TILE_DIAGONAL_WIDTH / 2);
@@ -216,6 +215,57 @@ class Edge {
     }
 }
 
+class Intersection {
+    constructor(viewport, x_pos, y_pos) {
+        this.viewport = viewport;
+        this.x_pos = x_pos;
+        this.y_pos = y_pos;
+    }
+
+    static from_tile(viewport, tile, side) {
+        let x_pos = tile.x_pos;
+        let y_pos = tile.y_pos;
+
+        switch (side) {
+            case TileSide.NORTH:
+                x_pos += TILE_DIAGONAL_WIDTH + TILE_HORIZONTAL_WIDTH;
+                break;
+            case TileSide.NORTH_EAST:
+                x_pos += TILE_WIDTH;
+                y_pos -= TILE_HEIGHT / 2;
+                break;
+            case TileSide.SOUTH_EAST:
+                x_pos += TILE_DIAGONAL_WIDTH + TILE_HORIZONTAL_WIDTH;
+                y_pos -= TILE_HEIGHT;
+                break;
+            case TileSide.SOUTH:
+                x_pos += TILE_DIAGONAL_WIDTH;
+                y_pos -= TILE_HEIGHT;
+                break;
+            case TileSide.SOUTH_WEST:
+                y_pos -= TILE_HEIGHT / 2;
+                break;
+            case TileSide.NORTH_WEST:
+                x_pos += TILE_DIAGONAL_WIDTH;
+                break;
+        }
+
+        return new Intersection(viewport, x_pos, y_pos);
+    }
+
+    draw_house() {
+        if (this.sprite !== undefined) {
+            this.viewport.removeChild(this.sprite);
+        }
+
+        this.sprite = new Sprite(spritesheet.textures["house.png"]);
+        this.viewport.addChild(this.sprite);
+        this.sprite.position.set(this.x_pos, this.y_pos * -1);
+        this.sprite.zIndex = 1;
+        this.sprite.anchor.set(0.5);
+    }
+}
+
 let tiles = {};
 let edges = {};
 let intersections = {};
@@ -234,6 +284,7 @@ function draw_board(board) {
         let tile_id = tile_ids.shift();
         assert(tile_id in tiles);
         let tile = tiles[tile_id];
+        console.log("tile: " + tile_id);
 
         let tile_def = board["tiles"][tile_id];
         for (let [side_name, edge_id] of Object.entries(tile_def["edges"])) {
@@ -253,19 +304,28 @@ function draw_board(board) {
                 }
             }
 
-            if (neighbor_tile_id === undefined) {
-                continue;
+            if (neighbor_tile_id !== undefined && !(neighbor_tile_id in tiles)) {
+                let neighbor = Tile.from_neighbor(viewport, tile, side);
+                tiles[neighbor_tile_id] = neighbor;
+                tile_ids.push(neighbor_tile_id);
+                neighbor.draw_resource("wood");
             }
-            if (neighbor_tile_id in tiles) {
+        }
+
+        for (let [side_name, intersection_id] of Object.entries(tile_def["intersections"])) {
+            if (intersection_id in intersections) {
                 continue;
             }
 
-            let neighbor = Tile.from_neighbor(viewport, tile, side);
-            tiles[neighbor_tile_id] = neighbor;
-            tile_ids.push(neighbor_tile_id);
-            neighbor.draw_resource("wood");
+            let side = TileSide[side_name];
+            let intersection = Intersection.from_tile(viewport, tile, side);
+            intersections[intersection_id] = intersection;
+            intersection.draw_house();
+            console.log("added intersection: " + intersection_id + " from side: " + side_name);
         }
     }
+
+    console.log("intersections: " + Object.keys(intersections).length);
 }
 
 console.log("game id: " + game_id);
