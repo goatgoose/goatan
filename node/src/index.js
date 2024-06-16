@@ -55,10 +55,11 @@ viewport
 
 viewport.fit();
 viewport.moveCenter(WORLD_WIDTH / 2, WORLD_HEIGHT / 2);
+viewport.sortableChildren = true;
 
 let spritesheet = await PIXI.Assets.load("/static/images/assets.json");
 
-const Side = Object.freeze({
+const TileSide = Object.freeze({
     NORTH: 0,
     NORTH_EAST: 1,
     SOUTH_EAST: 2,
@@ -67,12 +68,12 @@ const Side = Object.freeze({
     NORTH_WEST: 5,
 });
 
-class Tile {
-    static width = 33;
-    static height = 28;
-    static horizontal_width = 17;
-    static edge_width = (Tile.width - Tile.horizontal_width) / 2;
+const TILE_WIDTH = 33;
+const TILE_HEIGHT = 28;
+const TILE_HORIZONTAL_WIDTH = 17;
+const TILE_DIAGONAL_WIDTH = (TILE_WIDTH - TILE_HORIZONTAL_WIDTH) / 2;
 
+class Tile {
     constructor(viewport, x_pos, y_pos) {
         this.viewport = viewport;
         this.x_pos = x_pos;
@@ -86,27 +87,27 @@ class Tile {
         let y_pos = neighbor.y_pos;
 
         switch (side) {
-            case Side.NORTH:
-                y_pos += Tile.height;
+            case TileSide.NORTH:
+                y_pos += TILE_HEIGHT;
                 break;
-            case Side.NORTH_EAST:
-                y_pos += this.height / 2;
-                x_pos += this.width - this.edge_width;
+            case TileSide.NORTH_EAST:
+                y_pos += TILE_HEIGHT / 2;
+                x_pos += TILE_WIDTH - TILE_DIAGONAL_WIDTH;
                 break;
-            case Side.SOUTH_EAST:
-                y_pos -= this.height / 2;
-                x_pos += this.width - this.edge_width;
+            case TileSide.SOUTH_EAST:
+                y_pos -= TILE_HEIGHT / 2;
+                x_pos += TILE_WIDTH - TILE_DIAGONAL_WIDTH;
                 break;
-            case Side.SOUTH:
-                y_pos -= this.height;
+            case TileSide.SOUTH:
+                y_pos -= TILE_HEIGHT;
                 break;
-            case Side.SOUTH_WEST:
-                y_pos -= this.height / 2;
-                x_pos = x_pos - this.width + this.edge_width;
+            case TileSide.SOUTH_WEST:
+                y_pos -= TILE_HEIGHT / 2;
+                x_pos = x_pos - TILE_WIDTH + TILE_DIAGONAL_WIDTH;
                 break;
-            case Side.NORTH_WEST:
-                y_pos += this.height / 2;
-                x_pos = x_pos - this.width + this.edge_width;
+            case TileSide.NORTH_WEST:
+                y_pos += TILE_HEIGHT / 2;
+                x_pos = x_pos - TILE_WIDTH + TILE_DIAGONAL_WIDTH;
                 break;
         }
 
@@ -121,12 +122,96 @@ class Tile {
         let type_img = resource_type + ".png";
         this.sprite = new Sprite(spritesheet.textures[type_img]);
         this.viewport.addChild(this.sprite);
+        this.sprite.position.set(this.x_pos, this.y_pos * -1);
+        this.sprite.zIndex = 0;
+    }
+}
 
-        let x_pos = this.x_pos;
-        // pixi y-axis is inverted
-        let y_pos = this.y_pos * -1;
+const EdgeOrientation = Object.freeze({
+    HORIZONTAL: 0,
+    RIGHT: 1,
+    LEFT: 2
+});
 
-        this.sprite.position.set(x_pos, y_pos);
+function edge_orientation_from_side(side) {
+    switch (side) {
+        case TileSide.NORTH:
+        case TileSide.SOUTH:
+            return EdgeOrientation.HORIZONTAL;
+        case TileSide.NORTH_EAST:
+        case TileSide.SOUTH_WEST:
+            return EdgeOrientation.LEFT;
+        case TileSide.SOUTH_EAST:
+        case TileSide.NORTH_WEST:
+            return EdgeOrientation.RIGHT;
+    }
+}
+
+class Edge {
+    constructor(viewport, x_pos, y_pos, orientation) {
+        this.viewport = viewport;
+        this.x_pos = x_pos;
+        this.y_pos = y_pos;
+        this.orientation = orientation;
+
+        this.sprite = undefined;
+    }
+
+    static from_tile(viewport, tile, side) {
+        let x_pos = tile.x_pos;
+        let y_pos = tile.y_pos;
+
+        switch (side) {
+            case TileSide.NORTH:
+                x_pos += TILE_WIDTH / 2;
+                y_pos += 0;
+                break;
+            case TileSide.NORTH_EAST:
+                x_pos += TILE_WIDTH - (TILE_DIAGONAL_WIDTH / 2);
+                y_pos -= TILE_HEIGHT / 4;
+                break;
+            case TileSide.SOUTH_EAST:
+                x_pos += TILE_WIDTH - (TILE_DIAGONAL_WIDTH / 2);
+                y_pos -= TILE_HEIGHT - (TILE_HEIGHT / 4);
+                break;
+            case TileSide.SOUTH:
+                x_pos += TILE_WIDTH / 2;
+                y_pos -= TILE_HEIGHT;
+                break;
+            case TileSide.SOUTH_WEST:
+                x_pos += TILE_DIAGONAL_WIDTH / 2;
+                y_pos -= TILE_HEIGHT - (TILE_HEIGHT / 4);
+                break;
+            case TileSide.NORTH_WEST:
+                x_pos += TILE_DIAGONAL_WIDTH / 2;
+                y_pos -= TILE_HEIGHT / 4;
+                break;
+        }
+
+        return new Edge(viewport, x_pos, y_pos, edge_orientation_from_side(side));
+    }
+
+    static road_img(orientation) {
+        switch (orientation) {
+            case EdgeOrientation.HORIZONTAL:
+                return "road-flat.png";
+            case EdgeOrientation.RIGHT:
+                return "road-right.png";
+            case EdgeOrientation.LEFT:
+                return "road-left.png";
+        }
+    }
+
+    draw_road() {
+        if (this.sprite !== undefined) {
+            this.viewport.removeChild(this.sprite);
+        }
+
+        this.sprite = new Sprite(spritesheet.textures[Edge.road_img(this.orientation)]);
+        this.viewport.addChild(this.sprite);
+        this.sprite.position.set(this.x_pos, this.y_pos * -1);
+        this.sprite.zIndex = 1;
+        this.sprite.anchor.set(0.5);
     }
 }
 
@@ -151,7 +236,14 @@ function draw_board(board) {
 
         let tile_def = board["tiles"][tile_id];
         for (let [side_name, edge_id] of Object.entries(tile_def["edges"])) {
+            let side = TileSide[side_name];
             let edge_def = board["edges"][edge_id];
+
+            if (!(edge_id in edges)) {
+                let edge = Edge.from_tile(viewport, tile, side);
+                edges[edge_id] = edge;
+                edge.draw_road();
+            }
 
             let neighbor_tile_id = undefined;
             for (let edge_tile_id of edge_def["tiles"]) {
@@ -167,7 +259,6 @@ function draw_board(board) {
                 continue;
             }
 
-            let side = Side[side_name];
             let neighbor = Tile.from_neighbor(viewport, tile, side);
             tiles[neighbor_tile_id] = neighbor;
             tile_ids.push(neighbor_tile_id);
