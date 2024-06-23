@@ -2,6 +2,7 @@ import string
 import random
 import queue
 from typing import Dict
+from enum import Enum, auto
 
 from src.board import Board
 from src.util import GameItem
@@ -22,12 +23,21 @@ class GameManager:
         return self.games.get(id_)
 
 
+class GameState(Enum):
+    LOBBY = auto()
+    PLACEMENT = auto()
+    GAME = auto()
+    FINISHED = auto()
+
+
 class Goatan(GameItem):
     def __init__(self):
         super().__init__()
 
         self.players = PlayerManager()
-        self.board = Board.from_radius(2)
+        self.state = GameState.LOBBY
+
+        self.board = None
 
     @staticmethod
     def _generate_id():
@@ -40,3 +50,13 @@ class Goatan(GameItem):
         return {
             "board": self.board.serialize(),
         }
+
+    def initialize(self, **kwargs):
+        assert self.state == GameState.LOBBY
+
+        radius = 2
+        if "radius" in kwargs:
+            radius = min(kwargs["radius"], 10)
+        self.board = Board.from_radius(radius)
+
+        self.state = GameState.PLACEMENT

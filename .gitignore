@@ -1,9 +1,6 @@
 .idea
 __pycache__
-static/scripts/bootstrap.bundle.min.js
-static/scripts/main.js*
-static/css/bootstrap.min.css
-static/images
+static
 node/node_modules
 node/package-lock.json
 project/assets

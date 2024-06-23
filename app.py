@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, make_response
 from flask_socketio import SocketIO, emit
-from src.game import Goatan, GameManager
-from src.interface import GoatanNamespace
+from src.game import Goatan, GameManager, GameState
+from src.interface import GoatanNamespace, LobbyNamespace
 from src.user import UserManager, User
 
 app = Flask(__name__)
@@ -10,8 +10,11 @@ socketio = SocketIO(app)
 users = UserManager()
 games = GameManager()
 
-namespace = GoatanNamespace(games)
-socketio.on_namespace(namespace)
+game_namespace = GoatanNamespace(games)
+socketio.on_namespace(game_namespace)
+
+lobby_namespace = LobbyNamespace(games)
+socketio.on_namespace(lobby_namespace)
 
 
 @app.route("/")
@@ -22,27 +25,62 @@ def base():
 @app.route("/game/create")
 def create_game():
     game = games.create_game()
-    return redirect(f"/play/{game.id}")
+    return redirect(f"/game/join/{game.id}")
 
 
-@app.route("/play/<game_id>")
-def play(game_id):
+@app.route("/game/join/<game_id>")
+def join_game(game_id):
     game = games.get(game_id)
     if game is None:
-        return f"Game not found: {game_id}", 400
+        return f"Game not found: {game_id}", 404
 
-    response = make_response(render_template("game.html", game_id=game_id))
+    if game.state == GameState.LOBBY:
+        return redirect(f"/game/lobby/{game.id}")
+    else:
+        return redirect(f"/game/play/{game.id}")
+
+
+@app.route("/game/lobby/<game_id>")
+def lobby(game_id):
+    game = games.get(game_id)
+    if game is None:
+        return f"Game not found: {game_id}", 404
+
+    if game.state != GameState.LOBBY:
+        return f"Invalid game state: {game.state.name}", 400
+
+    response = make_response(render_template("lobby.html", game_id=game_id))
 
     user_id = request.cookies.get("user_id")
     if user_id is None or users.get(user_id) is None:
         user = users.create_user()
-        user_id = user.id
-        response.set_cookie("user_id", user_id)
-
-    user = users.get(user_id)
-    game.players.register_user(user)
+        response.set_cookie("user_id", user.id)
 
     return response
+
+
+@app.route("/game/play/<game_id>")
+def play(game_id):
+    game = games.get(game_id)
+    if game is None:
+        return f"Game not found: {game_id}", 404
+
+    if game.state == GameState.LOBBY:
+        return f"Invalid game state: {game.state.name}", 400
+
+    user_id = request.cookies.get("user_id")
+    if user_id is None or users.get(user_id) is None:
+        return "User not found", 400
+
+    player = game.players.player_for_user(user_id)
+    if player is None:
+        return "Player did not join game", 401
+
+    return make_response(render_template(
+        "game.html",
+        game_id=game_id,
+        players=game.players.serialize_player_list()
+    ))
 
 
 if __name__ == '__main__':
