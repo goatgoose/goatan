@@ -79,7 +79,7 @@ def play(game_id):
     return make_response(render_template(
         "game.html",
         game_id=game_id,
-        players=game.players.serialize_player_list()
+        players=game.players.serialize()["players"]
     ))
 
 

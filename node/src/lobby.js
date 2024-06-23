@@ -21,8 +21,8 @@ socket.on("player_update", function(event) {
 
     let player_div = $('#player_list');
     player_div.empty();
-    for (let player_id of event["players"]) {
-        player_div.append("<ul>" + player_id + "</ul>");
+    for (let player of event["players"]) {
+        player_div.append("<ul>" + player['name'] + "</ul>");
     }
 });
 socket.on("game_start", function(event) {

@@ -121,9 +121,7 @@ class LobbyNamespace(AuthenticatedNamespace):
 
         emit(
             "player_update",
-            {
-                "players": auth.game.players.serialize_player_list(),
-            },
+            auth.game.players.serialize(),
             to=auth.game.id,
         )
 
@@ -141,9 +139,7 @@ class LobbyNamespace(AuthenticatedNamespace):
 
         emit(
             "player_update",
-            {
-                "players": auth.game.players.serialize_player_list(),
-            },
+            auth.game.players.serialize(),
             to=auth.game.id,
         )
 

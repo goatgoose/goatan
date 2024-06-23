@@ -60,3 +60,4 @@ class Goatan(GameItem):
         self.board = Board.from_radius(radius)
 
         self.state = GameState.PLACEMENT
+        self.players.finalize()
