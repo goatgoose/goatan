@@ -38,6 +38,7 @@ class Goatan(GameItem):
         self.state = GameState.LOBBY
 
         self.board = None
+        self.active_player_index = 0
 
     @staticmethod
     def _generate_id():
@@ -45,11 +46,6 @@ class Goatan(GameItem):
             random.choice(string.ascii_lowercase + string.digits)
             for _ in range(8)
         ])
-
-    def serialize(self):
-        return {
-            "board": self.board.serialize(),
-        }
 
     def initialize(self, **kwargs):
         assert self.state == GameState.LOBBY
@@ -61,3 +57,14 @@ class Goatan(GameItem):
 
         self.state = GameState.PLACEMENT
         self.players.finalize()
+
+    @property
+    def active_player(self):
+        return self.players.get(self.active_player_index)
+
+    def serialize(self):
+        return {
+            "board": self.board.serialize(),
+            "players": self.players.serialize(),
+            "active_player": self.active_player.id,
+        }

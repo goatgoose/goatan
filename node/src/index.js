@@ -5,6 +5,7 @@ import {Viewport} from 'pixi-viewport'
 import arrayShuffle from 'array-shuffle'
 import Cookies from 'js-cookie'
 import { io } from "socket.io-client"
+import $ from "jquery";
 
 import {standard_board_definition, standard_tile_set} from './standard_board'
 import {Assets, Loader, Sprite, Spritesheet, Texture} from "pixi.js";
@@ -270,6 +271,13 @@ let tiles = {};
 let edges = {};
 let intersections = {};
 
+function clear_board() {
+    viewport.removeChildren();
+    tiles = {};
+    edges = {};
+    intersections = {};
+}
+
 function draw_board(board) {
     console.log("draw board");
     console.log(board);
@@ -284,7 +292,6 @@ function draw_board(board) {
         let tile_id = tile_ids.shift();
         assert(tile_id in tiles);
         let tile = tiles[tile_id];
-        console.log("tile: " + tile_id);
 
         let tile_def = board["tiles"][tile_id];
         for (let [side_name, edge_id] of Object.entries(tile_def["edges"])) {
@@ -321,11 +328,13 @@ function draw_board(board) {
             let intersection = Intersection.from_tile(viewport, tile, side);
             intersections[intersection_id] = intersection;
             intersection.draw_house();
-            console.log("added intersection: " + intersection_id + " from side: " + side_name);
         }
     }
+}
 
-    console.log("intersections: " + Object.keys(intersections).length);
+function set_active_player(player_id) {
+    $(".player-content").removeClass("active");
+    $("#player-content-" + player_id).addClass("active");
 }
 
 console.log("game id: " + game_id);
@@ -342,5 +351,8 @@ socket.on("connect", function() {
     console.log("socket connect");
 });
 socket.on("game_state", function(event) {
+    clear_board();
     draw_board(event["board"]);
+
+    set_active_player(event["active_player"]);
 });
