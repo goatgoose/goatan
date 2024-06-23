@@ -1,5 +1,5 @@
 import pprint
-from flask_socketio import Namespace, emit, ConnectionRefusedError, join_room
+from flask_socketio import Namespace, emit, ConnectionRefusedError, join_room, send
 from flask import request
 from typing import Dict, Optional
 from abc import ABCMeta, abstractmethod
@@ -118,6 +118,8 @@ class LobbyNamespace(AuthenticatedNamespace):
         self._create_player(token)
         auth = self.register_socket(request.sid, token)
         join_room(auth.game.id, namespace=self.namespace)
+
+        emit("player_id", {"player_id": auth.player.id})
 
         emit(
             "player_update",

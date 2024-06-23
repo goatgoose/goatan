@@ -76,10 +76,16 @@ def play(game_id):
     if player is None:
         return "Player did not join game", 401
 
+    player_list = game.players.serialize()["players"]
+    for player_dict in player_list:
+        if player_dict["id"] == player.id:
+            player_dict["name"] = player_dict["name"] + " (you)"
+            break
+
     return make_response(render_template(
         "game.html",
         game_id=game_id,
-        players=game.players.serialize()["players"]
+        players=player_list,
     ))
 
 
