@@ -56,7 +56,7 @@ class Goatan(GameItem):
 
         radius = 2
         if "radius" in kwargs:
-            radius = min(kwargs["radius"], 10)
+            radius = min(int(kwargs["radius"]), 10)
         self.board = Board.from_radius(radius)
 
         self.state = GameState.PLACEMENT

@@ -156,7 +156,7 @@ class LobbyNamespace(AuthenticatedNamespace):
         pprint.pprint(init_args)
 
         auth = self.get_auth(request.sid)
-        auth.game.initialize()
+        auth.game.initialize(**init_args)
 
         emit(
             "game_start",
