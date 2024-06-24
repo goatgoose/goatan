@@ -5,6 +5,8 @@ from abc import ABC
 import pprint
 
 from src.util import GameItem
+from src.player import Player
+from src.piece import Settlement, Road, PieceType, Piece
 
 
 class TileType(Enum):
@@ -105,6 +107,8 @@ class Intersection(GameItem):
         self.tiles: Set[Tile] = set()
         self.edges: Set[Edge] = set()
 
+        self.settlement: Optional[Piece] = None
+
         super().__init__()
 
     def associate_tile(self, tile: Tile):
@@ -121,11 +125,45 @@ class Intersection(GameItem):
         assert len(self.edges) < 3
         self.edges.add(edge)
 
+    def other_edges(self, edge):
+        assert edge in self.edges
+        for other_edge in self.edges:
+            if other_edge == edge:
+                continue
+            yield other_edge
+
+    def can_place_house(self, placement_phase: bool, player: Player) -> bool:
+        # a house can't be placed if something is already built here
+        if self.settlement is not None:
+            return False
+
+        # houses must be attached to a road owned by the player. this only applies when the game is
+        # out of the placement phase.
+        if not placement_phase:
+            bordering_owned_road = False
+            for edge in self.edges:
+                if edge.road is not None and edge.road.player == player:
+                    bordering_owned_road = True
+                    break
+            if not bordering_owned_road:
+                return False
+
+        # houses must be 2 edges away from other houses. if any edges are connected to a house, the
+        # new house can't be placed.
+        for edge in self.edges:
+            neighboring_intersection = edge.other_intersection(self)
+            if neighboring_intersection.settlement is not None:
+                return False
+
+        return True
+
 
 class Edge(GameItem):
     def __init__(self):
         self.tiles: Set[Tile] = set()
         self.intersections: Set[Intersection] = set()
+
+        self.road: Optional[Road] = None
 
         super().__init__()
 
@@ -142,6 +180,32 @@ class Edge(GameItem):
 
         assert len(self.intersections) < 2
         self.intersections.add(intersection)
+
+    def other_intersection(self, intersection: Intersection):
+        assert intersection in self.intersections
+        set_ = self.intersections.copy()
+        set_.remove(intersection)
+        return set_.pop()
+
+    def can_place_road(self, player: Player) -> bool:
+        # a road can't be placed if a road has already been placed.
+        if self.road is not None:
+            return False
+
+        for intersection in self.intersections:
+            settlement = intersection.settlement
+            if settlement is None:
+                # if the neighboring settlement doesn't exist, a bordering edge must contain a
+                # player-owned road.
+                for edge in intersection.other_edges(self):
+                    if edge.road is not None and edge.road.player == player:
+                        return True
+            else:
+                # otherwise, the neighboring settlement must be owned by the player.
+                if settlement.player == player:
+                    return True
+
+        return False
 
 
 class Board:
@@ -220,7 +284,7 @@ class Board:
 
     @staticmethod
     def from_radius(radius: int):
-        tile_depth: Dict[Tile: int] = {}
+        tile_depth: Dict[Tile, int] = {}
 
         center_tile = Tile(TileType.UNKNOWN)
         tile_depth[center_tile] = 0

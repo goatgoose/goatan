@@ -1,13 +1,14 @@
 import string
 import random
 import queue
-from typing import Dict
+from typing import Dict, Optional
 from enum import Enum, auto
 
 from src.board import Board
 from src.util import GameItem
 from src.user import User
 from src.player import PlayerManager, Player
+from src.phase import GamePhase, Placement
 
 
 class GameManager:
@@ -39,6 +40,7 @@ class Goatan(GameItem):
 
         self.board = None
         self.active_player_index = 0
+        self.phase: Optional[GamePhase] = None
 
     @staticmethod
     def _generate_id():
@@ -57,14 +59,11 @@ class Goatan(GameItem):
 
         self.state = GameState.PLACEMENT
         self.players.finalize()
-
-    @property
-    def active_player(self):
-        return self.players.get(self.active_player_index)
+        self.phase = Placement(self.board, self.players)
 
     def serialize(self):
         return {
             "board": self.board.serialize(),
             "players": self.players.serialize(),
-            "active_player": self.active_player.id,
+            "active_player": self.phase.active_player.id,
         }

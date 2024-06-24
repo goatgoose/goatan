@@ -43,6 +43,9 @@ class PlayerManager:
             "players": [player.serialize() for player in self._players]
         }
 
+    def __len__(self):
+        return len(self._players)
+
 
 class Player(GameItem):
     def __init__(self, user_id, name):
