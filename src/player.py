@@ -1,13 +1,26 @@
 from typing import Dict, Optional
 import random
+from enum import Enum
 
 from src.util import GameItem
 from src.user import User
 
 
+class PlayerColor(Enum):
+    WHITE = "white"
+    BLACK = "black"
+    BLUE = "blue"
+    GREEN = "green"
+    RED = "red"
+    YELLOW = "yellow"
+
+
 class PlayerManager:
     def __init__(self):
         self.finalized = False
+
+        self._colors = [color for color in PlayerColor]
+        random.shuffle(self._colors)
 
         self._players: [Player] = []
         self._player_for_user: Dict[str, Player] = {}  # User id : Player
@@ -17,7 +30,9 @@ class PlayerManager:
             return
 
         assert not self.finalized
-        player = Player(user_id, f"Player {len(self._players) + 1}")
+        assert len(self._colors) > 0
+
+        player = Player(user_id, f"Player {len(self._players) + 1}", self._colors.pop())
         self._players.append(player)
         self._player_for_user[user_id] = player
         return player
@@ -48,14 +63,16 @@ class PlayerManager:
 
 
 class Player(GameItem):
-    def __init__(self, user_id, name):
+    def __init__(self, user_id, name, color: PlayerColor):
         super().__init__()
 
         self.user_id = user_id
         self.name = name
+        self.color = color
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
+            "color": self.color.value,
         }

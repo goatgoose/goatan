@@ -8,6 +8,7 @@ from src.game import GameManager, Goatan, GameState
 from src.user import User
 from src.player import Player
 from src import error
+from src import event
 
 
 class Authenticated:
@@ -87,7 +88,7 @@ class GoatanNamespace(AuthenticatedNamespace):
         auth = self.register_socket(request.sid, token)
         join_room(auth.game.id, namespace=self.namespace)
 
-        emit("game_state", auth.game.serialize())
+        auth.game.emit_event(event.GameState(auth.game))
 
     def on_disconnect(self):
         self.unregister_socket(request.sid)

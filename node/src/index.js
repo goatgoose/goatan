@@ -61,6 +61,15 @@ viewport.sortableChildren = true;
 
 let spritesheet = await PIXI.Assets.load("/static/images/assets.json");
 
+const color_to_hex = Object.freeze({
+    "white": 0xe3e0c1,
+    "black": 0x1c1c1b,
+    "blue": 0x176bbf,
+    "green": 0x17bf3b,
+    "red": 0xb32f25,
+    "yellow": 0xbcdb1d,
+});
+
 const TileSide = Object.freeze({
     NORTH: 0,
     NORTH_EAST: 1,
@@ -203,12 +212,17 @@ class Edge {
         }
     }
 
-    draw_road() {
+    clear_road() {
         if (this.sprite !== undefined) {
             this.viewport.removeChild(this.sprite);
         }
+    }
+
+    draw_road(color) {
+        this.clear_road();
 
         this.sprite = new Sprite(spritesheet.textures[Edge.road_img(this.orientation)]);
+        this.sprite.tint = color_to_hex[color];
         this.viewport.addChild(this.sprite);
         this.sprite.position.set(this.x_pos, this.y_pos * -1);
         this.sprite.zIndex = 1;
@@ -254,12 +268,17 @@ class Intersection {
         return new Intersection(viewport, x_pos, y_pos);
     }
 
-    draw_house() {
+    clear_house() {
         if (this.sprite !== undefined) {
             this.viewport.removeChild(this.sprite);
         }
+    }
+
+    draw_house(color) {
+        this.clear_house();
 
         this.sprite = new Sprite(spritesheet.textures["house.png"]);
+        this.sprite.tint = color_to_hex[color];
         this.viewport.addChild(this.sprite);
         this.sprite.position.set(this.x_pos, this.y_pos * -1);
         this.sprite.zIndex = 1;
@@ -301,7 +320,7 @@ function draw_board(board) {
             if (!(edge_id in edges)) {
                 let edge = Edge.from_tile(viewport, tile, side);
                 edges[edge_id] = edge;
-                edge.draw_road();
+                edge.draw_road("yellow");
             }
 
             let neighbor_tile_id = undefined;
@@ -327,7 +346,7 @@ function draw_board(board) {
             let side = TileSide[side_name];
             let intersection = Intersection.from_tile(viewport, tile, side);
             intersections[intersection_id] = intersection;
-            intersection.draw_house();
+            intersection.draw_house("blue");
         }
     }
 }
