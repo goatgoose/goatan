@@ -356,3 +356,13 @@ socket.on("game_state", function(event) {
 
     set_active_player(event["active_player"]);
 });
+socket.on("new_turn", function(event) {
+    console.log(event);
+    set_active_player(event["active_player"]);
+});
+
+$(document).ready(function() {
+    $("#end-turn-button").click(function(){
+        socket.emit("end_turn");
+    });
+});

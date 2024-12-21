@@ -56,7 +56,7 @@ class Placement(GamePhase):
         if self._active_player_index == len(self._players) - 1 and self._turns_incrementing:
             self._turns_incrementing = False
             return
-        if self.active_player == 0 and not self._turns_incrementing:
+        if self._active_player_index == 0 and not self._turns_incrementing:
             self._finished = True
 
         if self._turns_incrementing:

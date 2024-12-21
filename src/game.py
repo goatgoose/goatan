@@ -3,12 +3,15 @@ import random
 import queue
 from typing import Dict, Optional
 from enum import Enum, auto
+from flask_socketio import emit
 
 from src.board import Board
 from src.util import GameItem
 from src.user import User
 from src.player import PlayerManager, Player
 from src.phase import GamePhase, Placement
+from src import error
+from src import event
 
 
 class GameManager:
@@ -39,7 +42,6 @@ class Goatan(GameItem):
         self.state = GameState.LOBBY
 
         self.board = None
-        self.active_player_index = 0
         self.phase: Optional[GamePhase] = None
 
     @staticmethod
@@ -48,6 +50,13 @@ class Goatan(GameItem):
             random.choice(string.ascii_lowercase + string.digits)
             for _ in range(8)
         ])
+
+    def emit_event(self, event_: event.Event):
+        emit(
+            event_.name,
+            event_.serialize(),
+            to=self.id,
+        )
 
     def initialize(self, **kwargs):
         assert self.state == GameState.LOBBY
@@ -60,6 +69,18 @@ class Goatan(GameItem):
         self.state = GameState.PLACEMENT
         self.players.finalize()
         self.phase = Placement(self.board, self.players)
+
+    def end_turn(self, player: Player):
+        print(f"end turn for {player.id}")
+
+        if self.phase is None:
+            raise error.InvalidState()
+
+        if player != self.phase.active_player:
+            raise error.InvalidAction(f"{player.id} is not the active player")
+
+        self.phase.end_turn()
+        self.emit_event(event.NewTurn(self.phase.active_player))
 
     def serialize(self):
         return {

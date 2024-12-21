@@ -7,6 +7,7 @@ from abc import ABCMeta, abstractmethod
 from src.game import GameManager, Goatan, GameState
 from src.user import User
 from src.player import Player
+from src import error
 
 
 class Authenticated:
@@ -87,6 +88,18 @@ class GoatanNamespace(AuthenticatedNamespace):
         join_room(auth.game.id, namespace=self.namespace)
 
         emit("game_state", auth.game.serialize())
+
+    def on_disconnect(self):
+        self.unregister_socket(request.sid)
+
+    def on_end_turn(self):
+        auth = self.get_auth(request.sid)
+
+        try:
+            auth.game.end_turn(auth.player)
+        except error.InvalidAction as e:
+            # TODO: return message
+            print(e.message())
 
 
 class LobbyNamespace(AuthenticatedNamespace):
