@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 
 from src.player import Player
+from src.piece import PieceType
+from src.util import GameItem
 
 
 class Event(ABC):
@@ -9,12 +11,21 @@ class Event(ABC):
     def name(self) -> str:
         pass
 
+
+class Sendable(Event):
     @abstractmethod
     def serialize(self) -> dict:
         pass
 
 
-class GameState(Event):
+class Receivable(Event):
+    @staticmethod
+    @abstractmethod
+    def deserialize(_dict: dict):
+        pass
+
+
+class GameState(Sendable):
     def __init__(self, game):
         self.game = game
 
@@ -26,7 +37,7 @@ class GameState(Event):
         return self.game.serialize()
 
 
-class NewTurn(Event):
+class NewTurn(Sendable):
     def __init__(self, active_player: Player):
         self.active_player = active_player
 
@@ -38,3 +49,20 @@ class NewTurn(Event):
         return {
             "active_player": self.active_player.id,
         }
+
+
+class Place(Receivable):
+    def __init__(self, piece_type: PieceType, item: GameItem):
+        self.piece_type = piece_type
+        self.item = item
+
+    @property
+    def name(self) -> str:
+        return "place"
+
+    @staticmethod
+    def deserialize(_dict: dict):
+        return Place(
+            _dict["piece_type"],
+            _dict["item"],
+        )

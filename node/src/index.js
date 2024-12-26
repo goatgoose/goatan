@@ -227,6 +227,8 @@ class Edge {
         this.sprite.position.set(this.x_pos, this.y_pos * -1);
         this.sprite.zIndex = 1;
         this.sprite.anchor.set(0.5);
+
+        return this.sprite;
     }
 }
 
@@ -283,6 +285,8 @@ class Intersection {
         this.sprite.position.set(this.x_pos, this.y_pos * -1);
         this.sprite.zIndex = 1;
         this.sprite.anchor.set(0.5);
+
+        return this.sprite;
     }
 }
 
@@ -320,7 +324,16 @@ function draw_board(board) {
             if (!(edge_id in edges)) {
                 let edge = Edge.from_tile(viewport, tile, side);
                 edges[edge_id] = edge;
-                edge.draw_road("yellow");
+                let sprite = edge.draw_road("white");
+                sprite.eventMode = "static";
+                sprite.cursor = "pointer";
+                sprite.on("pointerdown", function() {
+                    console.log("click edge: " + edge_id);
+                    socket.emit("place", {
+                        "piece_type": "road",
+                        "item": edge_id,
+                    });
+                });
             }
 
             let neighbor_tile_id = undefined;
@@ -346,7 +359,7 @@ function draw_board(board) {
             let side = TileSide[side_name];
             let intersection = Intersection.from_tile(viewport, tile, side);
             intersections[intersection_id] = intersection;
-            intersection.draw_house("blue");
+            intersection.draw_house("white");
         }
     }
 }

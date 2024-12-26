@@ -17,7 +17,7 @@ class GamePhase(ABC):
         pass
 
     @abstractmethod
-    def piece_is_placeable(self, item_id: str, piece_type: PieceType) -> bool:
+    def piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
         pass
 
     @abstractmethod
@@ -47,7 +47,7 @@ class Placement(GamePhase):
     def placeable_pieces(self) -> Dict[str, List[PieceType]]:
         pass
 
-    def piece_is_placeable(self, item_id: str, piece_type: PieceType) -> bool:
+    def piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
         pass
 
     def end_turn(self):

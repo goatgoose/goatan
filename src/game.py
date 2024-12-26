@@ -12,6 +12,7 @@ from src.player import PlayerManager, Player
 from src.phase import GamePhase, Placement
 from src import error
 from src import event
+from src.piece import PieceType
 
 
 class GameManager:
@@ -51,7 +52,7 @@ class Goatan(GameItem):
             for _ in range(8)
         ])
 
-    def emit_event(self, event_: event.Event):
+    def emit_event(self, event_: event.Sendable):
         emit(
             event_.name,
             event_.serialize(),
@@ -81,6 +82,9 @@ class Goatan(GameItem):
 
         self.phase.end_turn()
         self.emit_event(event.NewTurn(self.phase.active_player))
+
+    def place(self, player: Player, piece_type: PieceType, location_id: str):
+        print(f"place {piece_type} for {player.id} on id {location_id}")
 
     def serialize(self):
         return {

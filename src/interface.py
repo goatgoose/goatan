@@ -102,6 +102,11 @@ class GoatanNamespace(AuthenticatedNamespace):
             # TODO: return message
             print(e.message())
 
+    def on_place(self, _dict):
+        auth = self.get_auth(request.sid)
+        place = event.Place.deserialize(_dict)
+        auth.game.place(auth.player, place.piece_type, place.item)
+
 
 class LobbyNamespace(AuthenticatedNamespace):
     def __init__(self, games: GameManager):
