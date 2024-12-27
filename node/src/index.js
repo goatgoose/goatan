@@ -301,9 +301,12 @@ function clear_board() {
     intersections = {};
 }
 
-function draw_board(board) {
+function draw_board(game_state) {
     console.log("draw board");
-    console.log(board);
+    console.log(game_state);
+
+    let players = game_state["players"]["player_map"];
+    let board = game_state["board"];
 
     let anchor_id = board["anchor_tile"];
     let anchor = new Tile(viewport, 0, 0);
@@ -324,16 +327,23 @@ function draw_board(board) {
             if (!(edge_id in edges)) {
                 let edge = Edge.from_tile(viewport, tile, side);
                 edges[edge_id] = edge;
-                let sprite = edge.draw_road("white");
-                sprite.eventMode = "static";
-                sprite.cursor = "pointer";
-                sprite.on("pointerdown", function() {
-                    console.log("click edge: " + edge_id);
-                    socket.emit("place", {
-                        "piece_type": "road",
-                        "item": edge_id,
+
+                let road = board["pieces"]["edges"][edge_id];
+                if (road !== undefined) {
+                    let color = players[road["player"]]["color"];
+                    edge.draw_road(color);
+                } else {
+                    let sprite = edge.draw_road("white");
+                    sprite.eventMode = "static";
+                    sprite.cursor = "pointer";
+                    sprite.on("pointerdown", function() {
+                        console.log("click edge: " + edge_id);
+                        socket.emit("place", {
+                            "piece_type": "road",
+                            "item": edge_id,
+                        });
                     });
-                });
+                }
             }
 
             let neighbor_tile_id = undefined;
@@ -359,16 +369,25 @@ function draw_board(board) {
             let side = TileSide[side_name];
             let intersection = Intersection.from_tile(viewport, tile, side);
             intersections[intersection_id] = intersection;
-            let sprite = intersection.draw_house("white");
-            sprite.eventMode = "static";
-            sprite.cursor = "pointer";
-            sprite.on("pointerdown", function() {
-                console.log("click intersection: " + intersection_id);
-                socket.emit("place", {
-                    "piece_type": "house",
-                    "item": intersection_id,
+
+            let piece = board["pieces"]["intersections"][intersection_id];
+            if (piece !== undefined) {
+                if (piece["type"] === "house") {
+                    let color = players[piece["player"]]["color"];
+                    intersection.draw_house(color);
+                }
+            } else {
+                let sprite = intersection.draw_house("white");
+                sprite.eventMode = "static";
+                sprite.cursor = "pointer";
+                sprite.on("pointerdown", function() {
+                    console.log("click intersection: " + intersection_id);
+                    socket.emit("place", {
+                        "piece_type": "house",
+                        "item": intersection_id,
+                    });
                 });
-            });
+            }
         }
     }
 }
@@ -393,7 +412,7 @@ socket.on("connect", function() {
 });
 socket.on("game_state", function(event) {
     clear_board();
-    draw_board(event["board"]);
+    draw_board(event);
 
     set_active_player(event["active_player"]);
 });

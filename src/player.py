@@ -55,7 +55,8 @@ class PlayerManager:
 
     def serialize(self):
         return {
-            "players": [player.serialize() for player in self._players]
+            "players": [player.serialize() for player in self._players],
+            "player_map": {player.id: player.serialize() for player in self._players}
         }
 
     def __len__(self):

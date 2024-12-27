@@ -212,8 +212,9 @@ class Board:
         self.edges: Dict[str, Edge] = {}
         self.intersections: Dict[str, Intersection] = {}
 
-        self._settlements: Dict[Player, Dict[Settlement, str]] = {}
-        self._roads: Dict[Player, Dict[Road, str]] = {}
+        # location_id : piece
+        self._settlements: Dict[Player, Dict[str, Settlement]] = {}
+        self._roads: Dict[Player, Dict[str, Road]] = {}
 
     def set_piece(self, piece: Piece, location_id: str):
         if isinstance(piece, Settlement):
@@ -228,26 +229,36 @@ class Board:
         intersection.settlement = settlement
         if settlement.player not in self._settlements:
             self._settlements[settlement.player] = {}
-        self._settlements[settlement.player][settlement] = location_id
+        self._settlements[settlement.player][location_id] = settlement
 
-    def settlements(self, player: Player) -> Dict[Settlement, str]:
+    def settlements(self, player: Player) -> Dict[str, Settlement]:
         settlements_for_player = self._settlements.get(player)
         if settlements_for_player is None:
             return dict()
         return settlements_for_player
+
+    def all_settlements(self) -> Tuple[str, Settlement]:
+        for settlements in self._settlements.values():
+            for location_id, settlement in settlements.items():
+                yield location_id, settlement
 
     def set_road(self, road: Road, location_id: str):
         edge = self.edges[location_id]
         edge.road = road
         if road.player not in self._roads:
             self._roads[road.player] = {}
-        self._roads[road.player][road] = location_id
+        self._roads[road.player][location_id] = road
 
-    def roads(self, player: Player) -> Dict[Road, str]:
+    def roads(self, player: Player) -> Dict[str, Road]:
         roads_for_player = self._roads.get(player)
         if roads_for_player is None:
             return dict()
         return roads_for_player
+
+    def all_roads(self) -> Dict[str, Road]:
+        for roads in self._roads.values():
+            for location_id, road in roads.items():
+                yield location_id, road
 
     @staticmethod
     def from_definition(definition: [dict]):
@@ -388,6 +399,20 @@ class Board:
                 } for edge in self.edges.values()
             },
             "anchor_tile": self.anchor_tile.id,
+            "pieces": {
+                "intersections": {
+                    intersection_id: {
+                        "type": settlement.type.value,
+                        "player": settlement.player.id,
+                    } for intersection_id, settlement in self.all_settlements()
+                },
+                "edges": {
+                    edge_id: {
+                        "type": road.type.value,
+                        "player": road.player.id,
+                    } for edge_id, road in self.all_roads()
+                }
+            }
         }
 
     def tile_graph(self):

@@ -102,6 +102,8 @@ class Goatan(GameItem):
 
         self.phase.place_piece(piece, location_id)
 
+        self.emit_event(event.GameState(self))
+
     def serialize(self):
         return {
             "board": self.board.serialize(),
