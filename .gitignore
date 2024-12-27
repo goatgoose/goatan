@@ -3,6 +3,5 @@ __pycache__
 static
 node/node_modules
 node/package-lock.json
-project/assets
 .DS_Store
 
