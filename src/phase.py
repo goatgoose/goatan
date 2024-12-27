@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
-from src.piece import PieceType, Settlement, Road, Piece
+from src.piece import PieceType, Settlement, Road, Piece, House
 from src.player import PlayerManager, Player
 from src.board import Board
 from src import error
@@ -24,10 +24,6 @@ class GamePhase(ABC):
         pass
 
     @abstractmethod
-    def placeable_pieces(self) -> Dict[str, List[PieceType]]:
-        pass
-
-    @abstractmethod
     def _piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
         pass
 
@@ -42,6 +38,10 @@ class GamePhase(ABC):
     @property
     @abstractmethod
     def finished(self):
+        pass
+
+    @abstractmethod
+    def serialize_hints(self):
         pass
 
 
@@ -85,9 +85,6 @@ class Placement(GamePhase):
     @property
     def active_player(self):
         return self._players.get(self._active_player_index)
-
-    def placeable_pieces(self) -> Dict[str, List[PieceType]]:
-        pass
 
     def _piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
         if piece_type == PieceType.HOUSE:
@@ -167,3 +164,31 @@ class Placement(GamePhase):
     @property
     def finished(self):
         return self._finished
+
+    def _placeable_settlements(self):
+        if not self._current_turn.placing_house:
+            return []
+        for intersection_id in self._board.intersections:
+            if self._house_is_placeable(intersection_id):
+                yield intersection_id, PieceType.HOUSE
+
+    def _placeable_roads(self):
+        if not self._current_turn.placing_road:
+            return []
+        for location_id in self._board.edges:
+            if self._road_is_placeable(location_id):
+                yield location_id, PieceType.ROAD
+
+    def serialize_hints(self):
+        return {
+            "intersections": {
+                intersection_id: {
+                    "type": piece_type.value,
+                } for intersection_id, piece_type in self._placeable_settlements()
+            },
+            "edges": {
+                edge_id: {
+                    "type": piece_type.value,
+                } for edge_id, piece_type in self._placeable_roads()
+            }
+        }

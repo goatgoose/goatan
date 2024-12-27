@@ -307,6 +307,7 @@ function draw_board(game_state) {
 
     let players = game_state["players"]["player_map"];
     let board = game_state["board"];
+    let hints = game_state["hints"];
 
     let anchor_id = board["anchor_tile"];
     let anchor = new Tile(viewport, 0, 0);
@@ -332,7 +333,10 @@ function draw_board(game_state) {
                 if (road !== undefined) {
                     let color = players[road["player"]]["color"];
                     edge.draw_road(color);
-                } else {
+                }
+
+                let road_hint = hints["edges"][edge_id];
+                if (road_hint !== undefined) {
                     let sprite = edge.draw_road("white");
                     sprite.eventMode = "static";
                     sprite.cursor = "pointer";
@@ -376,7 +380,10 @@ function draw_board(game_state) {
                     let color = players[piece["player"]]["color"];
                     intersection.draw_house(color);
                 }
-            } else {
+            }
+
+            let piece_hint = hints["intersections"][intersection_id];
+            if (piece_hint !== undefined) {
                 let sprite = intersection.draw_house("white");
                 sprite.eventMode = "static";
                 sprite.cursor = "pointer";

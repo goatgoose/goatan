@@ -81,7 +81,8 @@ class Goatan(GameItem):
             raise error.InvalidAction(f"{player.id} is not the active player")
 
         self.phase.end_turn()
-        self.emit_event(event.NewTurn(self.phase.active_player))
+        self.emit_event(event.NewTurn(self.phase.active_player))  # TODO: consolidate with GameState event
+        self.emit_event(event.GameState(self))
 
         if self.phase.finished:
             print("phase finished")
@@ -107,6 +108,7 @@ class Goatan(GameItem):
     def serialize(self):
         return {
             "board": self.board.serialize(),
+            "hints": self.phase.serialize_hints(),
             "players": self.players.serialize(),
             "active_player": self.phase.active_player.id,
         }
