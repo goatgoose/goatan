@@ -8,8 +8,11 @@ from src import error
 
 
 class GamePhase(ABC):
-    def __init__(self, board: Board):
+    def __init__(self, board: Board, players: PlayerManager):
         self._board: Board = board
+        self._players: PlayerManager = players
+
+        self._active_player_index = 0
 
     def place_piece(self, piece: Piece, location_id: str):
         if not self._piece_is_placeable(location_id, piece.type):
@@ -19,9 +22,8 @@ class GamePhase(ABC):
         self._piece_placed(location_id, piece.type)
 
     @property
-    @abstractmethod
     def active_player(self) -> Player:
-        pass
+        return self._players.get(self._active_player_index)
 
     @abstractmethod
     def _piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
@@ -41,6 +43,29 @@ class GamePhase(ABC):
         pass
 
     @abstractmethod
+    def serialize_hints(self):
+        pass
+
+
+class Game(GamePhase):
+    def __init__(self, board: Board, players: PlayerManager):
+        super().__init__(board, players)
+
+        self._finished = False
+
+    def _piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
+        pass
+
+    def _piece_placed(self, location_id: str, piece_type: PieceType):
+        pass
+
+    def end_turn(self):
+        pass
+
+    @property
+    def finished(self):
+        pass
+
     def serialize_hints(self):
         pass
 
@@ -74,17 +99,11 @@ class Placement(GamePhase):
             self._placing_road = True
 
     def __init__(self, board: Board, players: PlayerManager):
-        super().__init__(board)
-        self._players: PlayerManager = players
+        super().__init__(board, players)
 
         self._finished = False
-        self._active_player_index = 0
         self._turns_incrementing = True
         self._current_turn = Placement.Turn()
-
-    @property
-    def active_player(self):
-        return self._players.get(self._active_player_index)
 
     def _piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
         if piece_type == PieceType.HOUSE:
@@ -138,6 +157,7 @@ class Placement(GamePhase):
 
     def _piece_placed(self, location_id: str, piece_type: PieceType):
         if piece_type == PieceType.HOUSE:
+            # Resources are received for the second house placed.
             if not self._turns_incrementing:
                 intersection = self._board.intersections[location_id]
                 for resource_type in intersection.collect():

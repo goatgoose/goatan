@@ -10,7 +10,7 @@ from src import board_generator
 from src.util import GameItem
 from src.user import User
 from src.player import PlayerManager, Player
-from src.phase import GamePhase, Placement
+from src import phase
 from src import error
 from src import event
 from src.piece import PieceType, House, Road
@@ -44,7 +44,8 @@ class Goatan(GameItem):
         self.state = GameState.LOBBY
 
         self.board = None
-        self.phase: Optional[GamePhase] = None
+        self.phases = [phase.Placement, phase.Game]
+        self.phase: Optional[phase.GamePhase] = None
 
     @staticmethod
     def _generate_id():
@@ -73,7 +74,7 @@ class Goatan(GameItem):
 
         self.state = GameState.PLACEMENT
         self.players.finalize()
-        self.phase = Placement(self.board, self.players)
+        self.phase = self.phases.pop(0)(self.board, self.players)
 
     def end_turn(self, player: Player):
         print(f"end turn for {player.id}")
