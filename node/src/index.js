@@ -355,7 +355,10 @@ function draw_board(game_state) {
     let anchor = new Tile(viewport, 0, 0);
     tiles[anchor_id] = anchor;
     anchor.draw_resource(board["tiles"][anchor_id]["type"]);
-    anchor.draw_number_tile(board["tiles"][anchor_id]["resource_number"]);
+    let resource_number = board["tiles"][anchor_id]["resource_number"];
+    if (resource_number !== null) {
+        anchor.draw_number_tile(resource_number);
+    }
 
     let tile_ids = [anchor_id];
     while (tile_ids.length > 0) {
@@ -405,7 +408,10 @@ function draw_board(game_state) {
                 tiles[neighbor_tile_id] = neighbor;
                 tile_ids.push(neighbor_tile_id);
                 neighbor.draw_resource(board["tiles"][neighbor_tile_id]["type"]);
-                neighbor.draw_number_tile(board["tiles"][neighbor_tile_id]["resource_number"]);
+                let resource_number = board["tiles"][neighbor_tile_id]["resource_number"];
+                if (resource_number !== null) {
+                    neighbor.draw_number_tile(resource_number);
+                }
             }
         }
 

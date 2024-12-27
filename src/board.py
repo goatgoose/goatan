@@ -104,6 +104,10 @@ class Tile(GameItem):
 
             yield tile
 
+    @property
+    def farmable(self):
+        return self.type != TileType.DESERT
+
     def serialize(self):
         return {
             "type": self.type.name
@@ -356,7 +360,7 @@ class Board:
                         side.name: intersection.id for side, intersection in tile.intersections.items()
                     },
                     "type": tile.type.value,
-                    "resource_number": tile.resource_number.value,
+                    "resource_number": tile.resource_number.value if tile.resource_number is not None else None,
                 } for tile in self.tiles.values()
             },
             "edges": {

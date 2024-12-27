@@ -58,7 +58,8 @@ class StandardProvider(TileProvider):
         # TODO: prevent neighboring 6s/8s
         tile = Tile()
         tile.type = self.tiles.pop()
-        tile.resource_number = self.resource_numbers.pop()
+        if tile.farmable:
+            tile.resource_number = self.resource_numbers.pop()
         return tile
 
 
