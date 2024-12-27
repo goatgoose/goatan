@@ -17,6 +17,10 @@ lobby_namespace = LobbyNamespace(games)
 socketio.on_namespace(lobby_namespace)
 
 
+def error_page(message):
+    return make_response(render_template("error.html", message=message))
+
+
 @app.route("/")
 def base():
     return render_template("index.html")
@@ -32,7 +36,7 @@ def create_game():
 def join_game(game_id):
     game = games.get(game_id)
     if game is None:
-        return f"Game not found: {game_id}", 404
+        return error_page(f"Game not found: {game_id}")
 
     if game.state == GameState.LOBBY:
         return redirect(f"/game/lobby/{game.id}")
@@ -44,10 +48,10 @@ def join_game(game_id):
 def lobby(game_id):
     game = games.get(game_id)
     if game is None:
-        return f"Game not found: {game_id}", 404
+        return error_page(f"Game not found: {game_id}")
 
     if game.state != GameState.LOBBY:
-        return f"Invalid game state: {game.state.name}", 400
+        return error_page(f"Invalid game state: {game.state.name}")
 
     response = make_response(render_template("lobby.html", game_id=game_id))
 
@@ -63,18 +67,18 @@ def lobby(game_id):
 def play(game_id):
     game = games.get(game_id)
     if game is None:
-        return f"Game not found: {game_id}", 404
+        return error_page(f"Game not found: {game_id}")
 
     if game.state == GameState.LOBBY:
-        return f"Invalid game state: {game.state.name}", 400
+        return error_page(f"Invalid game state: {game.state.name}")
 
     user_id = request.cookies.get("user_id")
     if user_id is None or users.get(user_id) is None:
-        return "User not found", 400
+        return error_page(f"User not found: {user_id}")
 
     player = game.players.player_for_user(user_id)
     if player is None:
-        return "Player did not join game", 401
+        return error_page(f"User did not join the game: {user_id}")
 
     player_list = game.players.serialize()["players"]
     for player_dict in player_list:
