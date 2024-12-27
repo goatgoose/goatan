@@ -19,6 +19,19 @@ class TileType(Enum):
     UNKNOWN = "unknown"
 
 
+class ResourceNumber(Enum):
+    TWO = 2
+    THREE = 3
+    FOUR = 4
+    FIVE = 5
+    SIX = 6
+    EIGHT = 8
+    NINE = 9
+    TEN = 10
+    ELEVEN = 11
+    TWELVE= 12
+
+
 class TileSide(Enum):
     NORTH = 0
     NORTH_EAST = 1
@@ -44,8 +57,9 @@ class TileSide(Enum):
 
 
 class Tile(GameItem):
-    def __init__(self, type_: TileType):
-        self.type = type_
+    def __init__(self):
+        self.type = TileType.UNKNOWN
+        self.resource_number: Optional[ResourceNumber] = None
 
         self.neighbors: Dict[TileSide, Tile] = {}
         self.edges: Dict[TileSide, Edge] = {}
@@ -264,6 +278,10 @@ class Board:
     def from_definition(definition: [dict]):
         pass
 
+    def initialize(self, anchor_tile: Tile):
+        self._construct_edge_graph()
+        self.anchor_tile = anchor_tile
+
     def _construct_edge_graph(self):
         for tile in self.tiles.values():
 
@@ -327,59 +345,6 @@ class Board:
                 previous_intersection.associate_edge(edge)
                 edge.associate_intersection(previous_intersection)
 
-    @staticmethod
-    def from_radius(radius: int):
-        tile_depth: Dict[Tile, int] = {}
-
-        center_tile = Tile(TileType.UNKNOWN)
-        tile_depth[center_tile] = 0
-        tiles = [center_tile]
-
-        board = Board()
-        while len(tiles) > 0:
-            tile = tiles.pop(0)
-            board.tiles[tile.id] = tile
-
-            # create new neighboring tiles
-            if tile_depth[tile] < radius:
-                for tile_side in TileSide:
-                    if tile_side in tile.neighbors:
-                        continue
-
-                    new_tile = Tile(TileType.UNKNOWN)
-                    board.tiles[new_tile.id] = new_tile
-                    tile_depth[new_tile] = tile_depth[tile] + 1
-                    tiles.append(new_tile)
-
-                    tile.neighbors[tile_side] = new_tile
-                    new_tile.neighbors[TileSide.opposite(tile_side)] = tile
-
-            # associate neighboring tiles with each other
-            for tile_side in TileSide:
-                tile_1 = tile.neighbors.get(tile_side)
-                if not tile_1:
-                    continue
-                tile_2 = tile.neighbors.get(TileSide.wrap(tile_side.value + 1))
-                if not tile_2:
-                    continue
-
-                tile_1_side, tile_2_side = {
-                    TileSide.NORTH: (TileSide.SOUTH_EAST, TileSide.NORTH_WEST),
-                    TileSide.NORTH_EAST: (TileSide.SOUTH, TileSide.NORTH),
-                    TileSide.SOUTH_EAST: (TileSide.SOUTH_WEST, TileSide.NORTH_EAST),
-                    TileSide.SOUTH: (TileSide.NORTH_WEST, TileSide.SOUTH_EAST),
-                    TileSide.SOUTH_WEST: (TileSide.NORTH, TileSide.SOUTH),
-                    TileSide.NORTH_WEST: (TileSide.NORTH_EAST, TileSide.SOUTH_WEST),
-                }.get(tile_side)
-
-                tile_1.neighbors[tile_1_side] = tile_2
-                tile_2.neighbors[tile_2_side] = tile_1
-
-        board._construct_edge_graph()
-        board.anchor_tile = center_tile
-
-        return board
-
     def serialize(self):
         return {
             "tiles": {
@@ -390,7 +355,8 @@ class Board:
                     "intersections": {
                         side.name: intersection.id for side, intersection in tile.intersections.items()
                     },
-                    "type": tile.type.name,
+                    "type": tile.type.value,
+                    "resource_number": tile.resource_number.value,
                 } for tile in self.tiles.values()
             },
             "edges": {
@@ -428,10 +394,3 @@ class Board:
 
     def __repr__(self):
         return str(self)
-
-
-if __name__ == '__main__':
-    board = Board.from_radius(3)
-    print(board)
-
-    pprint.pprint(board.serialize())

@@ -1,8 +1,228 @@
 {
     "frames": {
-        "road-flat.png": {
+        "12.png": {
             "frame": {
                 "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "11.png": {
+            "frame": {
+                "x": 7,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "10.png": {
+            "frame": {
+                "x": 14,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "9.png": {
+            "frame": {
+                "x": 21,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "8.png": {
+            "frame": {
+                "x": 28,
+                "y": 0,
+                "w": 9,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 9,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 9,
+                "h": 7
+            }
+        },
+        "6.png": {
+            "frame": {
+                "x": 37,
+                "y": 0,
+                "w": 9,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 9,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 9,
+                "h": 7
+            }
+        },
+        "5.png": {
+            "frame": {
+                "x": 46,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "4.png": {
+            "frame": {
+                "x": 53,
+                "y": 0,
+                "w": 5,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 5,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 5,
+                "h": 7
+            }
+        },
+        "3.png": {
+            "frame": {
+                "x": 58,
+                "y": 0,
+                "w": 3,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 3,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 3,
+                "h": 7
+            }
+        },
+        "2.png": {
+            "frame": {
+                "x": 61,
+                "y": 0,
+                "w": 3,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 3,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 3,
+                "h": 7
+            }
+        },
+        "number-tile.png": {
+            "frame": {
+                "x": 64,
+                "y": 0,
+                "w": 11,
+                "h": 11
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 11,
+                "h": 11
+            },
+            "sourceSize": {
+                "w": 11,
+                "h": 11
+            }
+        },
+        "road-flat.png": {
+            "frame": {
+                "x": 75,
                 "y": 0,
                 "w": 7,
                 "h": 2
@@ -22,7 +242,7 @@
         },
         "road-right.png": {
             "frame": {
-                "x": 7,
+                "x": 82,
                 "y": 0,
                 "w": 5,
                 "h": 6
@@ -42,7 +262,7 @@
         },
         "road-left.png": {
             "frame": {
-                "x": 12,
+                "x": 87,
                 "y": 0,
                 "w": 5,
                 "h": 6
@@ -62,7 +282,7 @@
         },
         "city.png": {
             "frame": {
-                "x": 17,
+                "x": 92,
                 "y": 0,
                 "w": 4,
                 "h": 5
@@ -82,7 +302,7 @@
         },
         "house.png": {
             "frame": {
-                "x": 21,
+                "x": 96,
                 "y": 0,
                 "w": 4,
                 "h": 3
@@ -102,8 +322,8 @@
         },
         "desert.png": {
             "frame": {
-                "x": 25,
-                "y": 0,
+                "x": 0,
+                "y": 11,
                 "w": 33,
                 "h": 28
             },
@@ -122,8 +342,8 @@
         },
         "sheep.png": {
             "frame": {
-                "x": 58,
-                "y": 0,
+                "x": 33,
+                "y": 11,
                 "w": 33,
                 "h": 28
             },
@@ -142,8 +362,8 @@
         },
         "brick.png": {
             "frame": {
-                "x": 91,
-                "y": 0,
+                "x": 66,
+                "y": 11,
                 "w": 33,
                 "h": 28
             },
@@ -162,8 +382,8 @@
         },
         "wood.png": {
             "frame": {
-                "x": 124,
-                "y": 0,
+                "x": 0,
+                "y": 39,
                 "w": 33,
                 "h": 28
             },
@@ -182,8 +402,8 @@
         },
         "stone.png": {
             "frame": {
-                "x": 157,
-                "y": 0,
+                "x": 33,
+                "y": 39,
                 "w": 33,
                 "h": 28
             },
@@ -202,8 +422,8 @@
         },
         "wheat.png": {
             "frame": {
-                "x": 190,
-                "y": 0,
+                "x": 66,
+                "y": 39,
                 "w": 33,
                 "h": 28
             },
@@ -227,10 +447,10 @@
         "image": "assets.png",
         "format": "RGBA8888",
         "size": {
-            "w": 223,
-            "h": 28
+            "w": 100,
+            "h": 67
         },
         "scale": "1",
-        "smartupdate": "$TexturePacker:SmartUpdate:2344494ea31faa137a8520fb4b200041:f1683550c2c6df24008efb8133cc95c7:a759b6bbc8381ac9c472b28f589ad0d6$"
+        "smartupdate": "$TexturePacker:SmartUpdate:c2f17f27ea78f308f9fb7d5f8250ad2d:df4738b1d139ac379fc0dc0b0a3d3310:a759b6bbc8381ac9c472b28f589ad0d6$"
     }
 }

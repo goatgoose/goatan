@@ -6,6 +6,7 @@ from enum import Enum, auto
 from flask_socketio import emit
 
 from src.board import Board
+from src import board_generator
 from src.util import GameItem
 from src.user import User
 from src.player import PlayerManager, Player
@@ -67,7 +68,8 @@ class Goatan(GameItem):
         radius = 2
         if "radius" in kwargs:
             radius = min(int(kwargs["radius"]), 10)
-        self.board = Board.from_radius(radius)
+        generator = board_generator.StandardGenerator(radius=radius)
+        self.board = generator.generate()
 
         self.state = GameState.PLACEMENT
         self.players.finalize()

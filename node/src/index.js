@@ -8,7 +8,7 @@ import { io } from "socket.io-client"
 import $ from "jquery";
 
 import {standard_board_definition, standard_tile_set} from './standard_board'
-import {Assets, Loader, Sprite, Spritesheet, Texture} from "pixi.js";
+import {Assets, Loader, Sprite, Spritesheet, TextStyle, Texture} from "pixi.js";
 
 function assert(condition, message) {
     if (!condition) {
@@ -91,7 +91,9 @@ class Tile {
         this.x_pos = x_pos;
         this.y_pos = y_pos;
 
-        this.sprite = undefined;
+        this.tile_sprite = undefined;
+        this.number_tile_sprite = undefined;
+        this.number_text_sprite = undefined;
     }
 
     static from_neighbor(viewport, neighbor, side) {
@@ -126,16 +128,55 @@ class Tile {
         return new Tile(viewport, x_pos, y_pos);
     }
 
-    draw_resource(resource_type) {
-        if (this.sprite !== undefined) {
-            this.viewport.removeChild(this.sprite);
+    clear_resource() {
+        if (this.tile_sprite !== undefined) {
+            this.clear_number_tile();
+            this.viewport.removeChild(this.tile_sprite);
         }
+    }
+
+    draw_resource(resource_type) {
+        this.clear_resource();
 
         let type_img = resource_type + ".png";
-        this.sprite = new Sprite(spritesheet.textures[type_img]);
-        this.viewport.addChild(this.sprite);
-        this.sprite.position.set(this.x_pos, this.y_pos * -1);
-        this.sprite.zIndex = 0;
+        this.tile_sprite = new Sprite(spritesheet.textures[type_img]);
+        this.viewport.addChild(this.tile_sprite);
+        this.tile_sprite.position.set(this.x_pos, this.y_pos * -1);
+        this.tile_sprite.zIndex = 0;
+    }
+
+    clear_number_tile() {
+        if (this.number_text_sprite !== undefined) {
+            assert(this.number_tile_sprite !== undefined);
+            this.number_tile_sprite.removeChild(this.number_text_sprite);
+        }
+        if (this.number_tile_sprite !== undefined) {
+            assert(this.tile_sprite !== undefined);
+            this.tile_sprite.removeChild(this.number_tile_sprite);
+        }
+    }
+
+    draw_number_tile(number) {
+        this.clear_number_tile();
+
+        this.number_tile_sprite = new Sprite(spritesheet.textures["number-tile.png"]);
+        this.tile_sprite.addChild(this.number_tile_sprite);
+        this.number_tile_sprite.position.set(11, 9);
+        this.number_tile_sprite.zIndex = 1;
+
+        this.number_text_sprite = new Sprite(spritesheet.textures[number + ".png"]);
+        this.number_tile_sprite.addChild(this.number_text_sprite);
+        this.number_text_sprite.zIndex = 2;
+
+        let x_offset = (
+            this.number_tile_sprite.texture.width
+            - this.number_text_sprite.texture.width
+        ) / 2;
+        let y_offset = (
+            this.number_tile_sprite.texture.height
+            - this.number_text_sprite.texture.height
+        ) / 2;
+        this.number_text_sprite.position.set(x_offset, y_offset);
     }
 }
 
@@ -313,7 +354,8 @@ function draw_board(game_state) {
     let anchor_id = board["anchor_tile"];
     let anchor = new Tile(viewport, 0, 0);
     tiles[anchor_id] = anchor;
-    anchor.draw_resource("wood");
+    anchor.draw_resource(board["tiles"][anchor_id]["type"]);
+    anchor.draw_number_tile(board["tiles"][anchor_id]["resource_number"]);
 
     let tile_ids = [anchor_id];
     while (tile_ids.length > 0) {
@@ -362,7 +404,8 @@ function draw_board(game_state) {
                 let neighbor = Tile.from_neighbor(viewport, tile, side);
                 tiles[neighbor_tile_id] = neighbor;
                 tile_ids.push(neighbor_tile_id);
-                neighbor.draw_resource("wood");
+                neighbor.draw_resource(board["tiles"][neighbor_tile_id]["type"]);
+                neighbor.draw_number_tile(board["tiles"][neighbor_tile_id]["resource_number"]);
             }
         }
 
