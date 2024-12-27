@@ -52,11 +52,13 @@ class Goatan(GameItem):
             for _ in range(8)
         ])
 
-    def emit_event(self, event_: event.Sendable):
+    def emit_event(self, event_: event.Sendable, to=None):
+        if to is None:
+            to = self.id
         emit(
             event_.name,
             event_.serialize(),
-            to=self.id,
+            to=to,
         )
 
     def initialize(self, **kwargs):

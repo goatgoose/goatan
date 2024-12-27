@@ -88,6 +88,7 @@ class GoatanNamespace(AuthenticatedNamespace):
         auth = self.register_socket(request.sid, token)
         join_room(auth.game.id, namespace=self.namespace)
 
+        auth.game.emit_event(event.PlayerInfo(auth.player), to=request.sid)
         auth.game.emit_event(event.GameState(auth.game))
 
     def on_disconnect(self):

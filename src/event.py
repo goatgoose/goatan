@@ -37,6 +37,18 @@ class GameState(Sendable):
         return self.game.serialize()
 
 
+class PlayerInfo(Sendable):
+    def __init__(self, player: Player):
+        self.player = player
+
+    @property
+    def name(self) -> str:
+        return "player_info"
+
+    def serialize(self) -> dict:
+        return self.player.serialize()
+
+
 class Place(Receivable):
     def __init__(self, piece_type: PieceType, item: GameItem):
         self.piece_type = piece_type

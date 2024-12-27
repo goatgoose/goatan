@@ -62,6 +62,7 @@ viewport.sortableChildren = true;
 let spritesheet = await PIXI.Assets.load("/static/images/assets.json");
 
 const color_to_hex = Object.freeze({
+    "hint": 0xffffff,
     "white": 0xe3e0c1,
     "black": 0x1c1c1b,
     "blue": 0x176bbf,
@@ -336,8 +337,8 @@ function draw_board(game_state) {
                 }
 
                 let road_hint = hints["edges"][edge_id];
-                if (road_hint !== undefined) {
-                    let sprite = edge.draw_road("white");
+                if (road_hint !== undefined && game_state["active_player"] === player_id) {
+                    let sprite = edge.draw_road("hint");
                     sprite.eventMode = "static";
                     sprite.cursor = "pointer";
                     sprite.on("pointerdown", function() {
@@ -383,8 +384,8 @@ function draw_board(game_state) {
             }
 
             let piece_hint = hints["intersections"][intersection_id];
-            if (piece_hint !== undefined) {
-                let sprite = intersection.draw_house("white");
+            if (piece_hint !== undefined && game_state["active_player"] === player_id) {
+                let sprite = intersection.draw_house("hint");
                 sprite.eventMode = "static";
                 sprite.cursor = "pointer";
                 sprite.on("pointerdown", function() {
@@ -408,14 +409,21 @@ console.log("game id: " + game_id);
 let user_id = await Cookies.get("user_id");
 console.log(user_id);
 
+let player_id = undefined;
+
 let socket = io("/goatan", {
     auth: {
         game: game_id,
         user: user_id
     }
 });
-socket.on("connect", function() {
+socket.on("connect", function(event) {
     console.log("socket connect");
+});
+socket.on("player_info", function(event) {
+    console.log("player info");
+    console.log(event);
+    player_id = event["id"];
 });
 socket.on("game_state", function(event) {
     clear_board();
