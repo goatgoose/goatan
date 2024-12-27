@@ -1,8 +1,8 @@
 {
     "frames": {
-        "12.png": {
+        "sheep-icon.png": {
             "frame": {
-                "x": 0,
+                "x": 25,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -20,9 +20,9 @@
                 "h": 7
             }
         },
-        "11.png": {
+        "wheat-icon.png": {
             "frame": {
-                "x": 7,
+                "x": 32,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -40,9 +40,9 @@
                 "h": 7
             }
         },
-        "10.png": {
+        "stone-icon.png": {
             "frame": {
-                "x": 14,
+                "x": 39,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -60,67 +60,7 @@
                 "h": 7
             }
         },
-        "9.png": {
-            "frame": {
-                "x": 21,
-                "y": 0,
-                "w": 7,
-                "h": 7
-            },
-            "rotated": false,
-            "trimmed": false,
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 7,
-                "h": 7
-            },
-            "sourceSize": {
-                "w": 7,
-                "h": 7
-            }
-        },
-        "8.png": {
-            "frame": {
-                "x": 28,
-                "y": 0,
-                "w": 9,
-                "h": 7
-            },
-            "rotated": false,
-            "trimmed": false,
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 9,
-                "h": 7
-            },
-            "sourceSize": {
-                "w": 9,
-                "h": 7
-            }
-        },
-        "6.png": {
-            "frame": {
-                "x": 37,
-                "y": 0,
-                "w": 9,
-                "h": 7
-            },
-            "rotated": false,
-            "trimmed": false,
-            "spriteSourceSize": {
-                "x": 0,
-                "y": 0,
-                "w": 9,
-                "h": 7
-            },
-            "sourceSize": {
-                "w": 9,
-                "h": 7
-            }
-        },
-        "5.png": {
+        "brick-icon.png": {
             "frame": {
                 "x": 46,
                 "y": 0,
@@ -140,9 +80,169 @@
                 "h": 7
             }
         },
-        "4.png": {
+        "wood-icon.png": {
             "frame": {
                 "x": 53,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "12.png": {
+            "frame": {
+                "x": 60,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "11.png": {
+            "frame": {
+                "x": 67,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "10.png": {
+            "frame": {
+                "x": 74,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "9.png": {
+            "frame": {
+                "x": 81,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "8.png": {
+            "frame": {
+                "x": 88,
+                "y": 0,
+                "w": 9,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 9,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 9,
+                "h": 7
+            }
+        },
+        "6.png": {
+            "frame": {
+                "x": 97,
+                "y": 0,
+                "w": 9,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 9,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 9,
+                "h": 7
+            }
+        },
+        "5.png": {
+            "frame": {
+                "x": 106,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "4.png": {
+            "frame": {
+                "x": 113,
                 "y": 0,
                 "w": 5,
                 "h": 7
@@ -162,8 +262,8 @@
         },
         "3.png": {
             "frame": {
-                "x": 58,
-                "y": 0,
+                "x": 0,
+                "y": 7,
                 "w": 3,
                 "h": 7
             },
@@ -182,8 +282,8 @@
         },
         "2.png": {
             "frame": {
-                "x": 61,
-                "y": 0,
+                "x": 3,
+                "y": 7,
                 "w": 3,
                 "h": 7
             },
@@ -202,8 +302,8 @@
         },
         "number-tile.png": {
             "frame": {
-                "x": 64,
-                "y": 0,
+                "x": 6,
+                "y": 7,
                 "w": 11,
                 "h": 11
             },
@@ -222,7 +322,7 @@
         },
         "road-flat.png": {
             "frame": {
-                "x": 75,
+                "x": 0,
                 "y": 0,
                 "w": 7,
                 "h": 2
@@ -242,7 +342,7 @@
         },
         "road-right.png": {
             "frame": {
-                "x": 82,
+                "x": 15,
                 "y": 0,
                 "w": 5,
                 "h": 6
@@ -262,7 +362,7 @@
         },
         "road-left.png": {
             "frame": {
-                "x": 87,
+                "x": 20,
                 "y": 0,
                 "w": 5,
                 "h": 6
@@ -282,7 +382,7 @@
         },
         "city.png": {
             "frame": {
-                "x": 92,
+                "x": 11,
                 "y": 0,
                 "w": 4,
                 "h": 5
@@ -302,7 +402,7 @@
         },
         "house.png": {
             "frame": {
-                "x": 96,
+                "x": 7,
                 "y": 0,
                 "w": 4,
                 "h": 3
@@ -322,8 +422,8 @@
         },
         "desert.png": {
             "frame": {
-                "x": 0,
-                "y": 11,
+                "x": 17,
+                "y": 7,
                 "w": 33,
                 "h": 28
             },
@@ -342,8 +442,8 @@
         },
         "sheep.png": {
             "frame": {
-                "x": 33,
-                "y": 11,
+                "x": 50,
+                "y": 7,
                 "w": 33,
                 "h": 28
             },
@@ -362,8 +462,8 @@
         },
         "brick.png": {
             "frame": {
-                "x": 66,
-                "y": 11,
+                "x": 83,
+                "y": 7,
                 "w": 33,
                 "h": 28
             },
@@ -383,7 +483,7 @@
         "wood.png": {
             "frame": {
                 "x": 0,
-                "y": 39,
+                "y": 35,
                 "w": 33,
                 "h": 28
             },
@@ -403,7 +503,7 @@
         "stone.png": {
             "frame": {
                 "x": 33,
-                "y": 39,
+                "y": 35,
                 "w": 33,
                 "h": 28
             },
@@ -423,7 +523,7 @@
         "wheat.png": {
             "frame": {
                 "x": 66,
-                "y": 39,
+                "y": 35,
                 "w": 33,
                 "h": 28
             },
@@ -447,10 +547,10 @@
         "image": "assets.png",
         "format": "RGBA8888",
         "size": {
-            "w": 100,
-            "h": 67
+            "w": 118,
+            "h": 63
         },
         "scale": "1",
-        "smartupdate": "$TexturePacker:SmartUpdate:c2f17f27ea78f308f9fb7d5f8250ad2d:df4738b1d139ac379fc0dc0b0a3d3310:a759b6bbc8381ac9c472b28f589ad0d6$"
+        "smartupdate": "$TexturePacker:SmartUpdate:38e47f6273f5bdda31fc44483729413c:eaced89ec554716b4e1a161009b5b161:a759b6bbc8381ac9c472b28f589ad0d6$"
     }
 }
