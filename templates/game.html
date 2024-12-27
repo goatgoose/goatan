@@ -5,7 +5,7 @@
     <title>Goatan {{ game_id }}</title>
 
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/css/catan.css" rel="stylesheet">
+    <link href="/static/css/game.css" rel="stylesheet">
 
     <script>
         let game_id = "{{ game_id }}"
@@ -31,6 +31,36 @@
                     <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
                 </a>
             {% endfor %}
+        </div>
+
+        <br>
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col">
+                    <img src="/static/images/assets/wood-icon.png" class="resource-icon float-start">
+                    <p id="wood-count">0</p>
+                </div>
+                <div class="col">
+                    <img src="/static/images/assets/wheat-icon.png" class="resource-icon float-start">
+                    <p id="wheat-count">0</p>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="col">
+                    <img src="/static/images/assets/sheep-icon.png" class="resource-icon float-start">
+                    <p id="sheep-count">0</p>
+                </div>
+                <div class="col">
+                    <img src="/static/images/assets/brick-icon.png" class="resource-icon float-start">
+                    <p id="brick-count">0</p>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="col">
+                    <img src="/static/images/assets/stone-icon.png" class="resource-icon float-start">
+                    <p id="stone-count">0</p>
+                </div>
+            </div>
         </div>
 
         <br>

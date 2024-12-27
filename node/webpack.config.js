@@ -15,6 +15,7 @@ module.exports = {
           patterns: [
               { from: '../project/assets.png', to: '../images/assets.png' },
               { from: '../project/assets.json', to: '../images/assets.json' },
+              { from: '../project/assets', to: '../images/assets' },
               { from: 'node_modules/bootstrap/dist/css/bootstrap.min.css', to: '../css/bootstrap.min.css' }
           ],
       }),
