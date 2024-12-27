@@ -359,7 +359,16 @@ function draw_board(board) {
             let side = TileSide[side_name];
             let intersection = Intersection.from_tile(viewport, tile, side);
             intersections[intersection_id] = intersection;
-            intersection.draw_house("white");
+            let sprite = intersection.draw_house("white");
+            sprite.eventMode = "static";
+            sprite.cursor = "pointer";
+            sprite.on("pointerdown", function() {
+                console.log("click intersection: " + intersection_id);
+                socket.emit("place", {
+                    "piece_type": "house",
+                    "item": intersection_id,
+                });
+            });
         }
     }
 }

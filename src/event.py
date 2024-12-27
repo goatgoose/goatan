@@ -63,6 +63,6 @@ class Place(Receivable):
     @staticmethod
     def deserialize(_dict: dict):
         return Place(
-            _dict["piece_type"],
+            PieceType(_dict["piece_type"]),
             _dict["item"],
         )

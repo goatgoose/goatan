@@ -105,7 +105,11 @@ class GoatanNamespace(AuthenticatedNamespace):
     def on_place(self, _dict):
         auth = self.get_auth(request.sid)
         place = event.Place.deserialize(_dict)
-        auth.game.place(auth.player, place.piece_type, place.item)
+        try:
+            auth.game.place(auth.player, place.piece_type, place.item)
+        except error.InvalidAction as e:
+            # TODO: return message
+            print(e.message())
 
 
 class LobbyNamespace(AuthenticatedNamespace):

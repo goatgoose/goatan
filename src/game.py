@@ -12,7 +12,7 @@ from src.player import PlayerManager, Player
 from src.phase import GamePhase, Placement
 from src import error
 from src import event
-from src.piece import PieceType
+from src.piece import PieceType, House, Road
 
 
 class GameManager:
@@ -83,8 +83,24 @@ class Goatan(GameItem):
         self.phase.end_turn()
         self.emit_event(event.NewTurn(self.phase.active_player))
 
+        if self.phase.finished:
+            print("phase finished")
+
     def place(self, player: Player, piece_type: PieceType, location_id: str):
         print(f"place {piece_type} for {player.id} on id {location_id}")
+
+        if self.phase.active_player != player:
+            raise error.InvalidAction(f"{player.id} is not the active player")
+
+        piece = {
+            PieceType.ROAD: Road(player),
+            PieceType.HOUSE: House(player),
+        }.get(piece_type)
+
+        if piece is None:
+            raise error.InvalidAction(f"Invalid piece type {piece_type}")
+
+        self.phase.place_piece(piece, location_id)
 
     def serialize(self):
         return {

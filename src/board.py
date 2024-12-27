@@ -107,7 +107,7 @@ class Intersection(GameItem):
         self.tiles: Set[Tile] = set()
         self.edges: Set[Edge] = set()
 
-        self.settlement: Optional[Piece] = None
+        self.settlement: Optional[Settlement] = None
 
         super().__init__()
 
@@ -132,30 +132,29 @@ class Intersection(GameItem):
                 continue
             yield other_edge
 
-    def can_place_house(self, placement_phase: bool, player: Player) -> bool:
-        # a house can't be placed if something is already built here
+    def borders_house(self):
+        # If an intersection contains a house, we can say it borders a house.
         if self.settlement is not None:
-            return False
+            return True
 
-        # houses must be attached to a road owned by the player. this only applies when the game is
-        # out of the placement phase.
-        if not placement_phase:
-            bordering_owned_road = False
-            for edge in self.edges:
-                if edge.road is not None and edge.road.player == player:
-                    bordering_owned_road = True
-                    break
-            if not bordering_owned_road:
-                return False
-
-        # houses must be 2 edges away from other houses. if any edges are connected to a house, the
-        # new house can't be placed.
+        # The intersection borders a house if any edge connects to an intersection with a house.
         for edge in self.edges:
             neighboring_intersection = edge.other_intersection(self)
             if neighboring_intersection.settlement is not None:
-                return False
+                return True
 
-        return True
+        return False
+
+    def borders_road_for_player(self, player: Player):
+        # A bordering edge must contain a road owned by the player.
+        for edge in self.edges:
+            road = edge.road
+            if road is None:
+                continue
+            if road.player == player:
+                return True
+
+        return False
 
 
 class Edge(GameItem):
@@ -187,24 +186,22 @@ class Edge(GameItem):
         set_.remove(intersection)
         return set_.pop()
 
-    def can_place_road(self, player: Player) -> bool:
-        # a road can't be placed if a road has already been placed.
-        if self.road is not None:
-            return False
-
+    def borders_settlement_for_player(self, player: Player):
         for intersection in self.intersections:
-            settlement = intersection.settlement
-            if settlement is None:
-                # if the neighboring settlement doesn't exist, a bordering edge must contain a
-                # player-owned road.
-                for edge in intersection.other_edges(self):
-                    if edge.road is not None and edge.road.player == player:
-                        return True
-            else:
-                # otherwise, the neighboring settlement must be owned by the player.
-                if settlement.player == player:
-                    return True
+            if intersection.settlement is None:
+                continue
+            if intersection.settlement.player == player:
+                return True
+        return False
 
+    def borders_road_for_player(self, player: Player):
+        for intersection in self.intersections:
+            for neighboring_edge in intersection.other_edges(self):
+                road = neighboring_edge.road
+                if road is None:
+                    continue
+                if road.player == player:
+                    return True
         return False
 
 
@@ -214,6 +211,43 @@ class Board:
         self.tiles: Dict[str, Tile] = {}
         self.edges: Dict[str, Edge] = {}
         self.intersections: Dict[str, Intersection] = {}
+
+        self._settlements: Dict[Player, Dict[Settlement, str]] = {}
+        self._roads: Dict[Player, Dict[Road, str]] = {}
+
+    def set_piece(self, piece: Piece, location_id: str):
+        if isinstance(piece, Settlement):
+            self.set_settlement(piece, location_id)
+        elif isinstance(piece, Road):
+            self.set_road(piece, location_id)
+        else:
+            raise ValueError(f"Invalid piece type: {piece}")
+
+    def set_settlement(self, settlement: Settlement, location_id: str):
+        intersection = self.intersections[location_id]
+        intersection.settlement = settlement
+        if settlement.player not in self._settlements:
+            self._settlements[settlement.player] = {}
+        self._settlements[settlement.player][settlement] = location_id
+
+    def settlements(self, player: Player) -> Dict[Settlement, str]:
+        settlements_for_player = self._settlements.get(player)
+        if settlements_for_player is None:
+            return dict()
+        return settlements_for_player
+
+    def set_road(self, road: Road, location_id: str):
+        edge = self.edges[location_id]
+        edge.road = road
+        if road.player not in self._roads:
+            self._roads[road.player] = {}
+        self._roads[road.player][road] = location_id
+
+    def roads(self, player: Player) -> Dict[Road, str]:
+        roads_for_player = self._roads.get(player)
+        if roads_for_player is None:
+            return dict()
+        return roads_for_player
 
     @staticmethod
     def from_definition(definition: [dict]):
