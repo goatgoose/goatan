@@ -7,6 +7,7 @@ import pprint
 from src.util import GameItem
 from src.player import Player
 from src.piece import Settlement, Road, PieceType, Piece
+from src.resource import ResourceType
 
 
 class TileType(Enum):
@@ -105,8 +106,14 @@ class Tile(GameItem):
             yield tile
 
     @property
-    def farmable(self):
-        return self.type != TileType.DESERT
+    def resource_type(self):
+        return {
+            TileType.BRICK: ResourceType.BRICK,
+            TileType.STONE: ResourceType.STONE,
+            TileType.WHEAT: ResourceType.WHEAT,
+            TileType.SHEEP: ResourceType.SHEEP,
+            TileType.WOOD: ResourceType.WOOD,
+        }.get(self.type)
 
     def serialize(self):
         return {
