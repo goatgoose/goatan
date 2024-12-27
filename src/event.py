@@ -37,20 +37,6 @@ class GameState(Sendable):
         return self.game.serialize()
 
 
-class NewTurn(Sendable):
-    def __init__(self, active_player: Player):
-        self.active_player = active_player
-
-    @property
-    def name(self) -> str:
-        return "new_turn"
-
-    def serialize(self) -> dict:
-        return {
-            "active_player": self.active_player.id,
-        }
-
-
 class Place(Receivable):
     def __init__(self, piece_type: PieceType, item: GameItem):
         self.piece_type = piece_type
