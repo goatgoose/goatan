@@ -181,6 +181,11 @@ class Intersection(GameItem):
 
         return False
 
+    def collect(self) -> [ResourceType]:
+        for tile in self.tiles:
+            resource = tile.resource_type
+            if resource:
+                yield resource
 
 class Edge(GameItem):
     def __init__(self):

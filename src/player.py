@@ -4,6 +4,7 @@ from enum import Enum
 
 from src.util import GameItem
 from src.user import User
+from src.resource import ResourceType
 
 
 class PlayerColor(Enum):
@@ -70,10 +71,15 @@ class Player(GameItem):
         self.user_id = user_id
         self.name = name
         self.color = color
+        self.resources = {resource_type: 0 for resource_type in ResourceType}
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
             "color": self.color.value,
+            "resources": {resource_type.value: count for resource_type, count in self.resources.items()}
         }
+
+    def give(self, resource_type: ResourceType, amount: int):
+        self.resources[resource_type] += amount

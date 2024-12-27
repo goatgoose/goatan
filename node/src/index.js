@@ -454,6 +454,14 @@ function set_active_player(player_id) {
     $("#player-content-" + player_id).addClass("active");
 }
 
+function set_resource_counts(resources) {
+    $("#wood-count").text(resources["wood"]);
+    $("#wheat-count").text(resources["wheat"]);
+    $("#sheep-count").text(resources["sheep"]);
+    $("#brick-count").text(resources["brick"]);
+    $("#stone-count").text(resources["stone"]);
+}
+
 console.log("game id: " + game_id);
 let user_id = await Cookies.get("user_id");
 console.log(user_id);
@@ -477,8 +485,8 @@ socket.on("player_info", function(event) {
 socket.on("game_state", function(event) {
     clear_board();
     draw_board(event);
-
     set_active_player(event["active_player"]);
+    set_resource_counts(event["players"]["player_map"][player_id]["resources"]);
 });
 
 $(document).ready(function() {

@@ -138,6 +138,10 @@ class Placement(GamePhase):
 
     def _piece_placed(self, location_id: str, piece_type: PieceType):
         if piece_type == PieceType.HOUSE:
+            if not self._turns_incrementing:
+                intersection = self._board.intersections[location_id]
+                for resource_type in intersection.collect():
+                    self.active_player.give(resource_type, 1)
             self._current_turn.placed_house()
         elif piece_type == PieceType.ROAD:
             self._current_turn.placed_road()
