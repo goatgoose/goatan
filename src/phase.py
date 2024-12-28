@@ -3,7 +3,7 @@ from typing import Dict, List, Tuple, Optional
 
 from src.piece import PieceType, Settlement, Road, Piece, House
 from src.player import PlayerManager, Player
-from src.board import Board
+from src.board import Board, ResourceNumber
 from src import error
 from src.dice import D6
 
@@ -109,7 +109,16 @@ class Game(GamePhase):
 
     def roll(self):
         self._roll = D6(2).roll()
-        # TODO: distribute resources
+
+        value = sum(self._roll)
+        if value == 7:
+            return
+
+        resource_number = ResourceNumber(value)
+        for intersection in self._board.settled_intersections:
+            player = intersection.settlement.player
+            for resource_type in intersection.collect(resource_number):
+                player.give(resource_type)
 
     @property
     def roll_result(self) -> Optional[int]:
@@ -217,7 +226,7 @@ class Placement(GamePhase):
             if not self._turns_incrementing:
                 intersection = self._board.intersections[location_id]
                 for resource_type in intersection.collect():
-                    self.active_player.give(resource_type, 1)
+                    self.active_player.give(resource_type)
             self._current_turn.placed_house()
         elif piece_type == PieceType.ROAD:
             self._current_turn.placed_road()

@@ -27,7 +27,7 @@ class ResourceNumber(Enum):
     NINE = 9
     TEN = 10
     ELEVEN = 11
-    TWELVE= 12
+    TWELVE = 12
 
 
 class TileSide(Enum):

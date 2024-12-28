@@ -33,8 +33,8 @@ class Player(GameItem):
             "resources": {resource_type.value: count for resource_type, count in self.resources.items()}
         }
 
-    def give(self, resource_type: ResourceType, amount: int):
-        self.resources[resource_type] += amount
+    def give(self, resource_type: ResourceType):
+        self.resources[resource_type] += 1
 
 
 class PlayerManager:
