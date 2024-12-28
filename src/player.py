@@ -17,6 +17,19 @@ class PlayerColor(Enum):
 
 
 class PlayerManager:
+    class Iterator:
+        def __init__(self, players: [Player]):
+            self._players = players
+            self.index = 0
+
+        def __next__(self):
+            if self.index < len(self._players):
+                player = self._players[self.index]
+                self.index += 1
+                return player
+            else:
+                raise StopIteration
+
     def __init__(self):
         self.finalized = False
 
@@ -62,6 +75,9 @@ class PlayerManager:
 
     def __len__(self):
         return len(self._players)
+
+    def __iter__(self):
+        return PlayerManager.Iterator(self._players)
 
 
 class Player(GameItem):
