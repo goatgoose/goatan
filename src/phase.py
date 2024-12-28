@@ -99,6 +99,9 @@ class Game(GamePhase):
         pass
 
     def end_turn(self):
+        if self._roll is None:
+            raise error.InvalidAction("Roll must be made before ending turn")
+
         self._active_player_index += 1
         self._active_player_index = self._active_player_index % len(self._players)
         self._roll = None
