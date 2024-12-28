@@ -230,7 +230,18 @@ class Edge(GameItem):
                 return True
         return False
 
-    def borders_road_for_player(self, player: Player):
+    def borders_settlement_or_road_for_player(self, player: Player):
+        return self._borders_house_for_player(player) or self._borders_road_for_player(player)
+
+    def _borders_house_for_player(self, player: Player):
+        for intersection in self.intersections:
+            if intersection.settlement is None:
+                continue
+            if intersection.settlement.player == player:
+                return True
+        return False
+
+    def _borders_road_for_player(self, player: Player):
         for intersection in self.intersections:
             for neighboring_edge in intersection.other_edges(self):
                 road = neighboring_edge.road

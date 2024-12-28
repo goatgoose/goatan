@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List, Tuple, Optional
 
-from src.piece import PieceType, Settlement, Road, Piece, House
+from src.piece import PieceType, Settlement, Road, Piece, House, PlayerPiece
 from src.player import PlayerManager, Player
 from src.board import Board, ResourceNumber
 from src import error
@@ -20,7 +20,7 @@ class GamePhase(ABC):
             raise error.InvalidAction(f"{piece.type.value} cannot be placed on {location_id}")
 
         self._board.set_piece(piece, location_id)
-        self._piece_placed(location_id, piece.type)
+        self._piece_placed(location_id, piece)
 
     @property
     def active_player(self) -> Player:
@@ -31,7 +31,7 @@ class GamePhase(ABC):
         pass
 
     @abstractmethod
-    def _piece_placed(self, location_id: str, piece_type: PieceType):
+    def _piece_placed(self, location_id: str, piece: Piece):
         pass
 
     @abstractmethod
@@ -84,6 +84,9 @@ class Game(GamePhase):
         if intersection.settlement is not None:
             return False
 
+        if not self.active_player.can_afford(House.cost()):
+            return False
+
         if intersection.borders_house():
             return False
 
@@ -93,10 +96,25 @@ class Game(GamePhase):
         return True
 
     def _road_is_placeable(self, location_id: str) -> bool:
-        pass
+        edge = self._board.edges.get(location_id)
+        if edge is None:
+            return False
 
-    def _piece_placed(self, location_id: str, piece_type: PieceType):
-        pass
+        if edge.road is not None:
+            return False
+
+        if not self.active_player.can_afford(Road.cost()):
+            return False
+
+        if not edge.borders_settlement_or_road_for_player(self.active_player):
+            return False
+
+        return True
+
+    def _piece_placed(self, location_id: str, piece: Piece):
+        if not isinstance(piece, PlayerPiece):
+            return
+        self.active_player.spend(piece.cost())
 
     def end_turn(self):
         if self._roll is None:
@@ -131,10 +149,28 @@ class Game(GamePhase):
     def expecting_roll(self) -> bool:
         return self._roll is None
 
+    def _placeable_settlements(self):
+        for intersection in self._board.intersections.values():
+            if self._house_is_placeable(intersection.id):
+                yield intersection
+
+    def _placeable_roads(self):
+        for edge in self._board.edges.values():
+            if self._road_is_placeable(edge.id):
+                yield edge
+
     def serialize_hints(self):
         return {
-            "intersections": {},
-            "edges": {},
+            "intersections": {
+                intersection.id: {
+                    "type": PieceType.HOUSE.value,
+                } for intersection in self._placeable_settlements()
+            },
+            "edges": {
+                edge.id: {
+                    "type": PieceType.ROAD.value,
+                } for edge in self._placeable_roads()
+            },
         }
 
 
@@ -223,15 +259,15 @@ class Placement(GamePhase):
 
         return True
 
-    def _piece_placed(self, location_id: str, piece_type: PieceType):
-        if piece_type == PieceType.HOUSE:
+    def _piece_placed(self, location_id: str, piece: Piece):
+        if piece.type == PieceType.HOUSE:
             # Resources are received for the second house placed.
             if not self._turns_incrementing:
                 intersection = self._board.intersections[location_id]
                 for resource_type in intersection.collect():
                     self.active_player.give(resource_type)
             self._current_turn.placed_house()
-        elif piece_type == PieceType.ROAD:
+        elif piece.type == PieceType.ROAD:
             self._current_turn.placed_road()
 
     def end_turn(self):

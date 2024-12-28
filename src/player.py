@@ -36,6 +36,17 @@ class Player(GameItem):
     def give(self, resource_type: ResourceType):
         self.resources[resource_type] += 1
 
+    def can_afford(self, cost: Dict[ResourceType, int]):
+        for resource_type, amount in cost.items():
+            if self.resources[resource_type] < amount:
+                return False
+        return True
+
+    def spend(self, cost: Dict[ResourceType, int]):
+        assert self.can_afford(cost)
+        for resource_type, amount in cost.items():
+            self.resources[resource_type] -= amount
+
 
 class PlayerManager:
     class Iterator:
