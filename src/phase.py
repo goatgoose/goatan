@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 
 from src.piece import PieceType, Settlement, Road, Piece, House
 from src.player import PlayerManager, Player
@@ -47,34 +47,26 @@ class GamePhase(ABC):
     def roll(self):
         pass
 
+    @property
+    @abstractmethod
+    def roll_result(self) -> Optional[int]:
+        pass
+
+    @property
+    @abstractmethod
+    def expecting_roll(self) -> bool:
+        pass
+
     @abstractmethod
     def serialize_hints(self):
         pass
 
 
 class Game(GamePhase):
-    class Turn:
-        def __init__(self):
-            self._finished = False
-            self._has_rolled = False
-
-        @property
-        def finished(self):
-            return self._finished
-
-        @property
-        def has_rolled(self):
-            return self._has_rolled
-
-        def rolled(self):
-            assert not self._finished
-            self._has_rolled = True
-
     def __init__(self, board: Board, players: PlayerManager):
         super().__init__(board, players)
 
-        self._finished = False
-        self._current_turn = Game.Turn()
+        self._roll = None
 
     def _piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
         if piece_type == PieceType.HOUSE:
@@ -109,16 +101,29 @@ class Game(GamePhase):
     def end_turn(self):
         self._active_player_index += 1
         self._active_player_index = self._active_player_index % len(self._players)
+        self._roll = None
 
     @property
     def finished(self):
-        return self._current_turn.finished
+        return False
 
     def roll(self):
-        pass
+        self._roll = D6(2).roll()
+        # TODO: distribute resources
+
+    @property
+    def roll_result(self) -> Optional[int]:
+        return self._roll
+
+    @property
+    def expecting_roll(self) -> bool:
+        return self._roll is None
 
     def serialize_hints(self):
-        pass
+        return {
+            "intersections": {},
+            "edges": {},
+        }
 
 
 class Placement(GamePhase):
@@ -242,6 +247,14 @@ class Placement(GamePhase):
 
     def roll(self):
         raise error.InvalidAction("No rolling during placement phase")
+
+    @property
+    def roll_result(self) -> Optional[int]:
+        return None
+
+    @property
+    def expecting_roll(self) -> bool:
+        return False
 
     def _placeable_settlements(self):
         if not self._current_turn.placing_house:

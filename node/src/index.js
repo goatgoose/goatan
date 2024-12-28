@@ -4,7 +4,7 @@ import '@pixi/graphics-extras';
 import {Viewport} from 'pixi-viewport'
 import arrayShuffle from 'array-shuffle'
 import Cookies from 'js-cookie'
-import { io } from "socket.io-client"
+import {io} from "socket.io-client"
 import $ from "jquery";
 
 import {standard_board_definition, standard_tile_set} from './standard_board'
@@ -386,7 +386,7 @@ function draw_board(game_state) {
                     let sprite = edge.draw_road("hint");
                     sprite.eventMode = "static";
                     sprite.cursor = "pointer";
-                    sprite.on("pointerdown", function() {
+                    sprite.on("pointerdown", function () {
                         console.log("click edge: " + edge_id);
                         socket.emit("place", {
                             "piece_type": "road",
@@ -437,7 +437,7 @@ function draw_board(game_state) {
                 let sprite = intersection.draw_house("hint");
                 sprite.eventMode = "static";
                 sprite.cursor = "pointer";
-                sprite.on("pointerdown", function() {
+                sprite.on("pointerdown", function () {
                     console.log("click intersection: " + intersection_id);
                     socket.emit("place", {
                         "piece_type": "house",
@@ -462,6 +462,33 @@ function set_resource_counts(resources) {
     $("#stone-count").text(resources["stone"]);
 }
 
+function update_dice(game_state) {
+    let active_player = game_state["active_player"];
+    let roll = game_state["roll"];
+    let expecting_roll = game_state["expecting_roll"];
+
+    let die_1 = $("#die-1");
+    let die_2 = $("#die-2");
+
+    if (roll === null) {
+        die_1.css("visibility", "hidden");
+        die_2.css("visibility", "hidden");
+    } else {
+        die_1.css("visibility", "visible");
+        die_1.attr("src", "/static/images/assets/die-" + roll[0] + ".png");
+
+        die_2.css("visibility", "visible");
+        die_2.attr("src", "/static/images/assets/die-" + roll[1] + ".png");
+    }
+
+    let roll_button = $("#roll-button");
+    if (expecting_roll && active_player === player_id) {
+        roll_button.css("visibility", "visible");
+    } else {
+        roll_button.css("visibility", "hidden");
+    }
+}
+
 console.log("game id: " + game_id);
 let user_id = await Cookies.get("user_id");
 console.log(user_id);
@@ -474,23 +501,27 @@ let socket = io("/goatan", {
         user: user_id
     }
 });
-socket.on("connect", function(event) {
+socket.on("connect", function (event) {
     console.log("socket connect");
 });
-socket.on("player_info", function(event) {
+socket.on("player_info", function (event) {
     console.log("player info");
     console.log(event);
     player_id = event["id"];
 });
-socket.on("game_state", function(event) {
+socket.on("game_state", function (event) {
     clear_board();
     draw_board(event);
     set_active_player(event["active_player"]);
     set_resource_counts(event["players"]["player_map"][player_id]["resources"]);
+    update_dice(event);
 });
 
-$(document).ready(function() {
-    $("#end-turn-button").click(function(){
+$(document).ready(function () {
+    $("#end-turn-button").click(function () {
         socket.emit("end_turn");
+    });
+    $("#roll-button").click(function () {
+        socket.emit("roll");
     });
 });

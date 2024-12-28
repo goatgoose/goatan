@@ -86,10 +86,10 @@ class Goatan(GameItem):
             raise error.InvalidAction(f"{player.id} is not the active player")
 
         self.phase.end_turn()
-        self.emit_event(event.GameState(self))
-
         if self.phase.finished:
-            print("phase finished")
+            self.phase = self.phases.pop(0)(self.board, self.players)
+
+        self.emit_event(event.GameState(self))
 
     def place(self, player: Player, piece_type: PieceType, location_id: str):
         print(f"place {piece_type} for {player.id} on id {location_id}")
@@ -123,4 +123,6 @@ class Goatan(GameItem):
             "hints": self.phase.serialize_hints(),
             "players": self.players.serialize(),
             "active_player": self.phase.active_player.id,
+            "roll": self.phase.roll_result,
+            "expecting_roll": self.phase.expecting_roll,
         }
