@@ -106,7 +106,15 @@ class Goatan(GameItem):
             raise error.InvalidAction(f"Invalid piece type {piece_type}")
 
         self.phase.place_piece(piece, location_id)
+        self.emit_event(event.GameState(self))
 
+    def roll(self, player: Player):
+        print(f"roll for {player.id}")
+
+        if self.phase.active_player != player:
+            raise error.InvalidAction(f"{player.id} is not the active player")
+
+        self.phase.roll()
         self.emit_event(event.GameState(self))
 
     def serialize(self):

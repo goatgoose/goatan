@@ -109,7 +109,13 @@ class GoatanNamespace(AuthenticatedNamespace):
         try:
             auth.game.place(auth.player, place.piece_type, place.item)
         except error.InvalidAction as e:
-            # TODO: return message
+            print(e.message())
+
+    def on_roll(self):
+        auth = self.get_auth(request.sid)
+        try:
+            auth.game.place(auth.player, place.piece_type, place.item)
+        except error.InvalidAction as e:
             print(e.message())
 
 

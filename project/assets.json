@@ -2,7 +2,7 @@
     "frames": {
         "2.png": {
             "frame": {
-                "x": 25,
+                "x": 0,
                 "y": 0,
                 "w": 3,
                 "h": 7
@@ -22,7 +22,7 @@
         },
         "3.png": {
             "frame": {
-                "x": 28,
+                "x": 3,
                 "y": 0,
                 "w": 3,
                 "h": 7
@@ -42,7 +42,7 @@
         },
         "4.png": {
             "frame": {
-                "x": 31,
+                "x": 6,
                 "y": 0,
                 "w": 5,
                 "h": 7
@@ -62,7 +62,7 @@
         },
         "5.png": {
             "frame": {
-                "x": 36,
+                "x": 11,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -82,7 +82,7 @@
         },
         "6.png": {
             "frame": {
-                "x": 43,
+                "x": 18,
                 "y": 0,
                 "w": 9,
                 "h": 7
@@ -102,7 +102,7 @@
         },
         "8.png": {
             "frame": {
-                "x": 52,
+                "x": 27,
                 "y": 0,
                 "w": 9,
                 "h": 7
@@ -122,7 +122,7 @@
         },
         "9.png": {
             "frame": {
-                "x": 61,
+                "x": 36,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -142,7 +142,7 @@
         },
         "10.png": {
             "frame": {
-                "x": 68,
+                "x": 43,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -162,7 +162,7 @@
         },
         "11.png": {
             "frame": {
-                "x": 75,
+                "x": 50,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -182,7 +182,7 @@
         },
         "12.png": {
             "frame": {
-                "x": 82,
+                "x": 57,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -202,7 +202,7 @@
         },
         "brick-icon.png": {
             "frame": {
-                "x": 89,
+                "x": 64,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -222,8 +222,8 @@
         },
         "brick.png": {
             "frame": {
-                "x": 18,
-                "y": 7,
+                "x": 71,
+                "y": 0,
                 "w": 33,
                 "h": 28
             },
@@ -242,7 +242,7 @@
         },
         "city.png": {
             "frame": {
-                "x": 11,
+                "x": 104,
                 "y": 0,
                 "w": 4,
                 "h": 5
@@ -262,8 +262,8 @@
         },
         "desert.png": {
             "frame": {
-                "x": 51,
-                "y": 7,
+                "x": 108,
+                "y": 0,
                 "w": 33,
                 "h": 28
             },
@@ -280,9 +280,129 @@
                 "h": 28
             }
         },
+        "die-1.png": {
+            "frame": {
+                "x": 141,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 9,
+                "h": 9
+            }
+        },
+        "die-2.png": {
+            "frame": {
+                "x": 150,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 9,
+                "h": 9
+            }
+        },
+        "die-3.png": {
+            "frame": {
+                "x": 159,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 9,
+                "h": 9
+            }
+        },
+        "die-4.png": {
+            "frame": {
+                "x": 168,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 9,
+                "h": 9
+            }
+        },
+        "die-5.png": {
+            "frame": {
+                "x": 177,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 9,
+                "h": 9
+            }
+        },
+        "die-6.png": {
+            "frame": {
+                "x": 186,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 9,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 9,
+                "h": 9
+            }
+        },
         "house.png": {
             "frame": {
-                "x": 7,
+                "x": 195,
                 "y": 0,
                 "w": 4,
                 "h": 3
@@ -302,8 +422,8 @@
         },
         "number-tile.png": {
             "frame": {
-                "x": 7,
-                "y": 7,
+                "x": 199,
+                "y": 0,
                 "w": 11,
                 "h": 11
             },
@@ -322,7 +442,7 @@
         },
         "road-flat.png": {
             "frame": {
-                "x": 0,
+                "x": 210,
                 "y": 0,
                 "w": 7,
                 "h": 2
@@ -342,7 +462,7 @@
         },
         "road-left.png": {
             "frame": {
-                "x": 15,
+                "x": 217,
                 "y": 0,
                 "w": 5,
                 "h": 6
@@ -362,7 +482,7 @@
         },
         "road-right.png": {
             "frame": {
-                "x": 20,
+                "x": 222,
                 "y": 0,
                 "w": 5,
                 "h": 6
@@ -382,7 +502,7 @@
         },
         "sheep-icon.png": {
             "frame": {
-                "x": 96,
+                "x": 227,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -402,8 +522,8 @@
         },
         "sheep.png": {
             "frame": {
-                "x": 84,
-                "y": 7,
+                "x": 234,
+                "y": 0,
                 "w": 33,
                 "h": 28
             },
@@ -422,7 +542,7 @@
         },
         "stone-icon.png": {
             "frame": {
-                "x": 103,
+                "x": 267,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -442,8 +562,8 @@
         },
         "stone.png": {
             "frame": {
-                "x": 0,
-                "y": 35,
+                "x": 274,
+                "y": 0,
                 "w": 33,
                 "h": 28
             },
@@ -462,7 +582,7 @@
         },
         "wheat-icon.png": {
             "frame": {
-                "x": 110,
+                "x": 307,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -482,8 +602,8 @@
         },
         "wheat.png": {
             "frame": {
-                "x": 33,
-                "y": 35,
+                "x": 314,
+                "y": 0,
                 "w": 33,
                 "h": 28
             },
@@ -502,8 +622,8 @@
         },
         "wood-icon.png": {
             "frame": {
-                "x": 0,
-                "y": 7,
+                "x": 347,
+                "y": 0,
                 "w": 7,
                 "h": 7
             },
@@ -522,8 +642,8 @@
         },
         "wood.png": {
             "frame": {
-                "x": 66,
-                "y": 35,
+                "x": 354,
+                "y": 0,
                 "w": 33,
                 "h": 28
             },
@@ -541,16 +661,26 @@
             }
         }
     },
+    "animations": {
+        "die": [
+            "die-1.png",
+            "die-2.png",
+            "die-3.png",
+            "die-4.png",
+            "die-5.png",
+            "die-6.png"
+        ]
+    },
     "meta": {
         "app": "https://www.codeandweb.com/texturepacker",
         "version": "1.1",
         "image": "assets.png",
         "format": "RGBA8888",
         "size": {
-            "w": 117,
-            "h": 63
+            "w": 387,
+            "h": 28
         },
         "scale": "1",
-        "smartupdate": "$TexturePacker:SmartUpdate:a5e7e2147005289ae29a06eab7c57553:e4755e620a3eb5a6ca52a6cd326295b6:a759b6bbc8381ac9c472b28f589ad0d6$"
+        "smartupdate": "$TexturePacker:SmartUpdate:06ce1e5aba63f0e7853b83545fbf56df:47d6daaf6c78b419cfabd5f90e2c776a:a759b6bbc8381ac9c472b28f589ad0d6$"
     }
 }

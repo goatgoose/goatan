@@ -23,12 +23,14 @@
         </a>
         <div class="list-group list-group-flush border-bottom scrollarea">
             {% for player in players %}
-                <a href="#" class="player-content list-group-item list-group-item-action py-3 lh-sm" aria-current="true" id="player-content-{{ player.id }}">
+                <a href="#" class="player-content list-group-item list-group-item-action py-3 lh-sm" aria-current="true"
+                   id="player-content-{{ player.id }}">
                     <div class="d-flex w-100 align-items-center justify-content-between">
                         <strong class="mb-1">{{ player.name }}</strong>
                         <small>Wed</small>
                     </div>
-                    <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
+                    <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.
+                    </div>
                 </a>
             {% endfor %}
         </div>
@@ -64,7 +66,25 @@
         </div>
 
         <br>
-        <button class="btn btn-primary btn-lg btn-block" id="end-turn-button" type="button">End turn</button>
+        <div class="container">
+            <div class="dice-holder row justify-content-md-center">
+                <div class="col">
+                    <img src="/static/images/assets/die-2.png" class="die img-fluid w-100">
+                </div>
+                <div class="col">
+                    <img src="/static/images/assets/die-5.png" class="die img-fluid w-100">
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="col">
+                    <button class="btn btn-primary btn-lg btn-block" id="roll-button" type="button">Roll</button>
+                </div>
+            </div>
+            <br>
+            <div class="row justify-content-md-center">
+                <button class="btn btn-primary btn-lg btn-block" id="end-turn-button" type="button">End turn</button>
+            </div>
+        </div>
     </div>
 </div>
 

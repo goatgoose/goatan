@@ -5,6 +5,7 @@ from src.piece import PieceType, Settlement, Road, Piece, House
 from src.player import PlayerManager, Player
 from src.board import Board
 from src import error
+from src.dice import D6
 
 
 class GamePhase(ABC):
@@ -43,27 +44,77 @@ class GamePhase(ABC):
         pass
 
     @abstractmethod
+    def roll(self):
+        pass
+
+    @abstractmethod
     def serialize_hints(self):
         pass
 
 
 class Game(GamePhase):
+    class Turn:
+        def __init__(self):
+            self._finished = False
+            self._has_rolled = False
+
+        @property
+        def finished(self):
+            return self._finished
+
+        @property
+        def has_rolled(self):
+            return self._has_rolled
+
+        def rolled(self):
+            assert not self._finished
+            self._has_rolled = True
+
     def __init__(self, board: Board, players: PlayerManager):
         super().__init__(board, players)
 
         self._finished = False
+        self._current_turn = Game.Turn()
 
     def _piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
+        if piece_type == PieceType.HOUSE:
+            return self._house_is_placeable(location_id)
+        elif piece_type == PieceType.ROAD:
+            return self._road_is_placeable(location_id)
+        else:
+            return False
+
+    def _house_is_placeable(self, location_id: str) -> bool:
+        intersection = self._board.intersections.get(location_id)
+        if intersection is None:
+            return False
+
+        if intersection.settlement is not None:
+            return False
+
+        if intersection.borders_house():
+            return False
+
+        if not intersection.borders_road_for_player(self.active_player):
+            return False
+
+        return True
+
+    def _road_is_placeable(self, location_id: str) -> bool:
         pass
 
     def _piece_placed(self, location_id: str, piece_type: PieceType):
         pass
 
     def end_turn(self):
-        pass
+        self._active_player_index += 1
+        self._active_player_index = self._active_player_index % len(self._players)
 
     @property
     def finished(self):
+        return self._current_turn.finished
+
+    def roll(self):
         pass
 
     def serialize_hints(self):
@@ -188,6 +239,9 @@ class Placement(GamePhase):
     @property
     def finished(self):
         return self._finished
+
+    def roll(self):
+        raise error.InvalidAction("No rolling during placement phase")
 
     def _placeable_settlements(self):
         if not self._current_turn.placing_house:
