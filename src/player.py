@@ -16,6 +16,27 @@ class PlayerColor(Enum):
     YELLOW = "yellow"
 
 
+class Player(GameItem):
+    def __init__(self, user_id, name, color: PlayerColor):
+        super().__init__()
+
+        self.user_id = user_id
+        self.name = name
+        self.color = color
+        self.resources = {resource_type: 0 for resource_type in ResourceType}
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "color": self.color.value,
+            "resources": {resource_type.value: count for resource_type, count in self.resources.items()}
+        }
+
+    def give(self, resource_type: ResourceType, amount: int):
+        self.resources[resource_type] += amount
+
+
 class PlayerManager:
     class Iterator:
         def __init__(self, players: [Player]):
@@ -78,24 +99,3 @@ class PlayerManager:
 
     def __iter__(self):
         return PlayerManager.Iterator(self._players)
-
-
-class Player(GameItem):
-    def __init__(self, user_id, name, color: PlayerColor):
-        super().__init__()
-
-        self.user_id = user_id
-        self.name = name
-        self.color = color
-        self.resources = {resource_type: 0 for resource_type in ResourceType}
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "color": self.color.value,
-            "resources": {resource_type.value: count for resource_type, count in self.resources.items()}
-        }
-
-    def give(self, resource_type: ResourceType, amount: int):
-        self.resources[resource_type] += amount
