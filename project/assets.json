@@ -244,25 +244,25 @@
             "frame": {
                 "x": 104,
                 "y": 0,
-                "w": 4,
-                "h": 5
+                "w": 6,
+                "h": 7
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 4,
-                "h": 5
+                "w": 6,
+                "h": 7
             },
             "sourceSize": {
-                "w": 4,
-                "h": 5
+                "w": 6,
+                "h": 7
             }
         },
         "desert.png": {
             "frame": {
-                "x": 108,
+                "x": 110,
                 "y": 0,
                 "w": 33,
                 "h": 28
@@ -282,7 +282,7 @@
         },
         "die-1.png": {
             "frame": {
-                "x": 141,
+                "x": 143,
                 "y": 0,
                 "w": 9,
                 "h": 9
@@ -302,7 +302,7 @@
         },
         "die-2.png": {
             "frame": {
-                "x": 150,
+                "x": 152,
                 "y": 0,
                 "w": 9,
                 "h": 9
@@ -322,7 +322,7 @@
         },
         "die-3.png": {
             "frame": {
-                "x": 159,
+                "x": 161,
                 "y": 0,
                 "w": 9,
                 "h": 9
@@ -342,7 +342,7 @@
         },
         "die-4.png": {
             "frame": {
-                "x": 168,
+                "x": 170,
                 "y": 0,
                 "w": 9,
                 "h": 9
@@ -362,7 +362,7 @@
         },
         "die-5.png": {
             "frame": {
-                "x": 177,
+                "x": 179,
                 "y": 0,
                 "w": 9,
                 "h": 9
@@ -382,7 +382,7 @@
         },
         "die-6.png": {
             "frame": {
-                "x": 186,
+                "x": 188,
                 "y": 0,
                 "w": 9,
                 "h": 9
@@ -402,27 +402,27 @@
         },
         "house.png": {
             "frame": {
-                "x": 195,
+                "x": 197,
                 "y": 0,
-                "w": 4,
-                "h": 3
+                "w": 6,
+                "h": 5
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 4,
-                "h": 3
+                "w": 6,
+                "h": 5
             },
             "sourceSize": {
-                "w": 4,
-                "h": 3
+                "w": 6,
+                "h": 5
             }
         },
         "number-tile.png": {
             "frame": {
-                "x": 199,
+                "x": 203,
                 "y": 0,
                 "w": 11,
                 "h": 11
@@ -442,67 +442,67 @@
         },
         "road-flat.png": {
             "frame": {
-                "x": 210,
+                "x": 214,
                 "y": 0,
-                "w": 7,
-                "h": 2
+                "w": 9,
+                "h": 4
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 7,
-                "h": 2
+                "w": 9,
+                "h": 4
             },
             "sourceSize": {
-                "w": 7,
-                "h": 2
+                "w": 9,
+                "h": 4
             }
         },
         "road-left.png": {
             "frame": {
-                "x": 217,
+                "x": 223,
                 "y": 0,
-                "w": 5,
-                "h": 6
+                "w": 7,
+                "h": 8
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 5,
-                "h": 6
+                "w": 7,
+                "h": 8
             },
             "sourceSize": {
-                "w": 5,
-                "h": 6
+                "w": 7,
+                "h": 8
             }
         },
         "road-right.png": {
             "frame": {
-                "x": 222,
+                "x": 230,
                 "y": 0,
-                "w": 5,
-                "h": 6
+                "w": 7,
+                "h": 8
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 5,
-                "h": 6
+                "w": 7,
+                "h": 8
             },
             "sourceSize": {
-                "w": 5,
-                "h": 6
+                "w": 7,
+                "h": 8
             }
         },
         "sheep-icon.png": {
             "frame": {
-                "x": 227,
+                "x": 237,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -522,7 +522,7 @@
         },
         "sheep.png": {
             "frame": {
-                "x": 234,
+                "x": 244,
                 "y": 0,
                 "w": 33,
                 "h": 28
@@ -542,7 +542,7 @@
         },
         "stone-icon.png": {
             "frame": {
-                "x": 267,
+                "x": 277,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -562,7 +562,7 @@
         },
         "stone.png": {
             "frame": {
-                "x": 274,
+                "x": 284,
                 "y": 0,
                 "w": 33,
                 "h": 28
@@ -582,7 +582,7 @@
         },
         "wheat-icon.png": {
             "frame": {
-                "x": 307,
+                "x": 317,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -602,7 +602,7 @@
         },
         "wheat.png": {
             "frame": {
-                "x": 314,
+                "x": 324,
                 "y": 0,
                 "w": 33,
                 "h": 28
@@ -622,7 +622,7 @@
         },
         "wood-icon.png": {
             "frame": {
-                "x": 347,
+                "x": 357,
                 "y": 0,
                 "w": 7,
                 "h": 7
@@ -642,7 +642,7 @@
         },
         "wood.png": {
             "frame": {
-                "x": 354,
+                "x": 364,
                 "y": 0,
                 "w": 33,
                 "h": 28
@@ -677,10 +677,10 @@
         "image": "assets.png",
         "format": "RGBA8888",
         "size": {
-            "w": 387,
+            "w": 397,
             "h": 28
         },
         "scale": "1",
-        "smartupdate": "$TexturePacker:SmartUpdate:06ce1e5aba63f0e7853b83545fbf56df:47d6daaf6c78b419cfabd5f90e2c776a:a759b6bbc8381ac9c472b28f589ad0d6$"
+        "smartupdate": "$TexturePacker:SmartUpdate:0a42007f4e75b91cf1c0906cf8c4d032:3427547d9267f8f859980f681252db7a:a759b6bbc8381ac9c472b28f589ad0d6$"
     }
 }
