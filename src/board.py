@@ -181,10 +181,18 @@ class Intersection(GameItem):
 
         return False
 
-    def collect(self) -> [ResourceType]:
+    def collect(self, resource_number: ResourceNumber) -> [ResourceType]:
+        assert self.settlement is not None
+
         for tile in self.tiles:
+            if tile.resource_number != resource_number:
+                continue
+
             resource = tile.resource_type
-            if resource:
+            if not resource:
+                continue
+
+            for _ in range(self.settlement.gather_amount):
                 yield resource
 
 class Edge(GameItem):
