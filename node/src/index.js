@@ -507,6 +507,8 @@ function reset_trade() {
         "wheat": 0,
         "wood": 0,
     };
+    $("#new-trade-button").css("visibility", "visible");
+    $("#trade-menu").css("visibility", "hidden");
 }
 function update_trade_menu() {
     $(".resource-count").each(function () {
@@ -526,6 +528,9 @@ function update_trade_menu() {
 
         $(this).html(html);
     });
+
+    $("#new-trade-button").css("visibility", "hidden");
+    $("#trade-menu").css("visibility", "visible");
 
     $(".trade-increment").click(function () {
         let resource = $(this).data("resource");
