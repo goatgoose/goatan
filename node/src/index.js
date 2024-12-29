@@ -454,19 +454,6 @@ function set_active_player(player_id) {
     $("#player-content-" + player_id).addClass("active");
 }
 
-let resources = {
-    "brick": 0,
-    "sheep": 0,
-    "stone": 0,
-    "wheat": 0,
-    "wood": 0,
-};
-function update_resource_counts() {
-    $(".resource-count").each(function () {
-        $(this).text(resources[$(this).data("resource")]);
-    });
-}
-
 function update_dice(game_state) {
     let active_player = game_state["active_player"];
     let roll = game_state["roll"];
@@ -494,6 +481,19 @@ function update_dice(game_state) {
     }
 }
 
+let resources = {
+    "brick": 0,
+    "sheep": 0,
+    "stone": 0,
+    "wheat": 0,
+    "wood": 0,
+};
+function update_resource_counts() {
+    $(".resource-count").each(function () {
+        $(this).text(resources[$(this).data("resource")]);
+    });
+}
+
 // resource : count
 // Where count is positive for items giving away and negative for items receiving.
 let proposed_trade = {};
@@ -511,12 +511,31 @@ function reset_trade() {
 function update_trade_menu() {
     $(".resource-count").each(function () {
         let resource = $(this).data("resource");
-        $(this).html(
-            resources[resource] + ' ' +
-            '<a class="trade-counter trade-increment" style="cursor: pointer">+</a> ' +
-            '<a class="trade-counter trade-decrement" style="cursor: pointer">-</a>' +
-            " (" + proposed_trade[resource] + ")"
-        );
+        let html = resources[resource] + ' ' +
+            '<a class="trade-counter trade-increment" data-resource="' + resource +'" style="cursor: pointer">+</a> ' +
+            '<a class="trade-counter trade-decrement" data-resource="' + resource + '" style="cursor: pointer">-</a>';
+
+        let proposed_count = proposed_trade[resource];
+        if (proposed_count > 0) {
+            html += '<span class="text-success">';
+        } else if (proposed_count < 0) {
+            html += '<span class="text-danger">';
+        }
+        html += " (" + proposed_trade[resource] + ")";
+        html += "</span>";
+
+        $(this).html(html);
+    });
+
+    $(".trade-increment").click(function () {
+        let resource = $(this).data("resource");
+        proposed_trade[resource]++;
+        update_trade_menu();
+    });
+    $(".trade-decrement").click(function () {
+        let resource = $(this).data("resource");
+        proposed_trade[resource]--;
+        update_trade_menu();
     });
 }
 
