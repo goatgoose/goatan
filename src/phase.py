@@ -69,6 +69,9 @@ class Game(GamePhase):
         self._roll = None
 
     def _piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
+        if self._roll is None:
+            return False
+
         if piece_type == PieceType.HOUSE:
             return self._house_is_placeable(location_id)
         elif piece_type == PieceType.ROAD:
@@ -164,12 +167,14 @@ class Game(GamePhase):
             "intersections": {
                 intersection.id: {
                     "type": PieceType.HOUSE.value,
-                } for intersection in self._placeable_settlements()
+                } for intersection in self._board.intersections.values()
+                    if self._piece_is_placeable(intersection.id, PieceType.HOUSE)
             },
             "edges": {
                 edge.id: {
                     "type": PieceType.ROAD.value,
-                } for edge in self._placeable_roads()
+                } for edge in self._board.edges.values()
+                    if self._piece_is_placeable(edge.id, PieceType.ROAD)
             },
         }
 
