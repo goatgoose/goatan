@@ -6,6 +6,7 @@ from src.player import PlayerManager, Player
 from src.board import Board, ResourceNumber
 from src import error
 from src.dice import D6
+from src.resource import Transaction
 
 
 class GamePhase(ABC):
@@ -92,7 +93,7 @@ class Game(GamePhase):
         if intersection.settlement is not None:
             return False
 
-        if not self.active_player.can_afford(House.cost()):
+        if not self.active_player.can_transact(House.cost()):
             return False
 
         if intersection.borders_house():
@@ -111,7 +112,7 @@ class Game(GamePhase):
         if edge.road is not None:
             return False
 
-        if not self.active_player.can_afford(Road.cost()):
+        if not self.active_player.can_transact(Road.cost()):
             return False
 
         if not edge.borders_settlement_or_road_for_player(self.active_player):
@@ -122,7 +123,7 @@ class Game(GamePhase):
     def _piece_placed(self, location_id: str, piece: Piece):
         if not isinstance(piece, PlayerPiece):
             return
-        self.active_player.spend(piece.cost())
+        self.active_player.transact(piece.cost())
 
     def end_turn(self):
         if self._roll is None:
@@ -149,7 +150,7 @@ class Game(GamePhase):
         for intersection in self._board.settled_intersections:
             player = intersection.settlement.player
             for resource_type in intersection.collect(resource_number):
-                player.give(resource_type)
+                player.transact(Transaction({resource_type: 1}))
 
     @property
     def roll_result(self) -> Optional[int]:
@@ -281,7 +282,7 @@ class Placement(GamePhase):
             if not self._turns_incrementing:
                 intersection = self._board.intersections[location_id]
                 for resource_type in intersection.collect():
-                    self.active_player.give(resource_type)
+                    self.active_player.transact(Transaction({resource_type: 1}))
             self._current_turn.placed_house()
         elif piece.type == PieceType.ROAD:
             self._current_turn.placed_road()

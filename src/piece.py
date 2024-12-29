@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Dict
 
 from src.player import Player
-from src.resource import Resource
+from src.resource import Resource, Transaction
 
 
 class PieceType(Enum):
@@ -32,7 +32,7 @@ class PlayerPiece(Piece, ABC):
 
     @staticmethod
     @abstractmethod
-    def cost() -> Dict[Resource, int]:
+    def cost() -> Transaction:
         pass
 
 
@@ -59,13 +59,13 @@ class House(Settlement):
         return 1
 
     @staticmethod
-    def cost() -> Dict[Resource, int]:
-        return {
-            Resource.WOOD: 1,
-            Resource.WHEAT: 1,
-            Resource.SHEEP: 1,
-            Resource.BRICK: 1,
-        }
+    def cost() -> Transaction:
+        return Transaction({
+            Resource.WOOD: -1,
+            Resource.WHEAT: -1,
+            Resource.SHEEP: -1,
+            Resource.BRICK: -1,
+        })
 
 
 class Road(PlayerPiece):
@@ -77,8 +77,8 @@ class Road(PlayerPiece):
         return PieceType.ROAD
 
     @staticmethod
-    def cost() -> Dict[Resource, int]:
-        return {
-            Resource.WOOD: 1,
-            Resource.BRICK: 1,
-        }
+    def cost() -> Transaction:
+        return Transaction({
+            Resource.WOOD: -1,
+            Resource.BRICK: -1,
+        })

@@ -4,7 +4,7 @@ from enum import Enum
 
 from src.util import GameItem
 from src.user import User
-from src.resource import Resource
+from src.resource import Resource, ResourceHaver
 
 
 class PlayerColor(Enum):
@@ -16,9 +16,10 @@ class PlayerColor(Enum):
     YELLOW = "yellow"
 
 
-class Player(GameItem):
+class Player(GameItem, ResourceHaver):
     def __init__(self, user_id, name, color: PlayerColor):
-        super().__init__()
+        GameItem.__init__(self)
+        ResourceHaver.__init__(self)
 
         self.user_id = user_id
         self.name = name
@@ -32,20 +33,6 @@ class Player(GameItem):
             "color": self.color.value,
             "resources": {resource_type.value: count for resource_type, count in self.resources.items()}
         }
-
-    def give(self, resource_type: Resource):
-        self.resources[resource_type] += 1
-
-    def can_afford(self, cost: Dict[Resource, int]):
-        for resource_type, amount in cost.items():
-            if self.resources[resource_type] < amount:
-                return False
-        return True
-
-    def spend(self, cost: Dict[Resource, int]):
-        assert self.can_afford(cost)
-        for resource_type, amount in cost.items():
-            self.resources[resource_type] -= amount
 
 
 class PlayerManager:
