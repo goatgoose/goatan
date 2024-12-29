@@ -538,6 +538,12 @@ function update_trade_menu() {
     $("#new-trade-button").css("visibility", "hidden");
     $("#trade-menu").css("visibility", "visible");
 
+    if (Object.values(proposed_trade).reduce((a, b) => a + b, 0) === 0) {
+        $("#propose-trade-button").prop("disabled", true);
+    } else {
+        $("#propose-trade-button").prop("disabled", false);
+    }
+
     $(".trade-increment").click(function () {
         let resource = $(this).data("resource");
         proposed_trade[resource]++;
