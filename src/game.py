@@ -125,4 +125,5 @@ class Goatan(GameItem):
             "active_player": self.phase.active_player.id,
             "roll": self.phase.roll_result,
             "expecting_roll": self.phase.expecting_roll,
+            "phase": self.phase.name(),
         }

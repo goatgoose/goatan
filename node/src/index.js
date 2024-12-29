@@ -498,7 +498,7 @@ function update_resource_counts() {
 // Where count is positive for items giving away and negative for items receiving.
 let proposed_trade = {};
 
-function reset_trade() {
+function reset_trade(show_new_trade_button) {
     update_resource_counts(resources);
     proposed_trade = {
         "brick": 0,
@@ -507,7 +507,13 @@ function reset_trade() {
         "wheat": 0,
         "wood": 0,
     };
-    $("#new-trade-button").css("visibility", "visible");
+
+    if (show_new_trade_button) {
+        $("#new-trade-button").css("visibility", "visible");
+    } else {
+        $("#new-trade-button").css("visibility", "hidden");
+    }
+
     $("#trade-menu").css("visibility", "hidden");
 }
 function update_trade_menu() {
@@ -575,7 +581,12 @@ socket.on("game_state", function (event) {
     resources = event["players"]["player_map"][player_id]["resources"];
     update_resource_counts();
     update_dice(event);
-    reset_trade();
+
+    if (event["phase"] === "game" && !event["expecting_roll"] && event["active_player"] === player_id) {
+        reset_trade(true);
+    } else {
+        reset_trade(false);
+    }
 });
 
 $(document).ready(function () {
@@ -590,6 +601,6 @@ $(document).ready(function () {
         update_trade_menu();
     });
     $("#cancel-trade-button").click(function() {
-        reset_trade();
+        reset_trade(true);
     });
 });

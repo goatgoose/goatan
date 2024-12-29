@@ -61,6 +61,11 @@ class GamePhase(ABC):
     def serialize_hints(self):
         pass
 
+    @staticmethod
+    @abstractmethod
+    def name():
+        pass
+
 
 class Game(GamePhase):
     def __init__(self, board: Board, players: PlayerManager):
@@ -179,6 +184,10 @@ class Game(GamePhase):
                     if self._piece_is_placeable(edge.id, PieceType.ROAD)
             },
         }
+
+    @staticmethod
+    def name():
+        return "game"
 
 
 class Placement(GamePhase):
@@ -338,3 +347,9 @@ class Placement(GamePhase):
                 } for edge_id, piece_type in self._placeable_roads()
             }
         }
+
+    @staticmethod
+    def name():
+        return "placement"
+
+
