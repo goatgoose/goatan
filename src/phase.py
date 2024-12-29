@@ -132,8 +132,10 @@ class Game(GamePhase):
         return False
 
     def roll(self):
-        self._roll = D6(2).roll()
+        if self._roll is not None:
+            raise error.InvalidAction("Already rolled")
 
+        self._roll = D6(2).roll()
         value = sum(self._roll)
         if value == 7:
             return
