@@ -534,6 +534,10 @@ function update_trade_menu() {
     });
     $(".trade-decrement").click(function () {
         let resource = $(this).data("resource");
+        if (resources[resource] + proposed_trade[resource] - 1 < 0) {
+            return;
+        }
+
         proposed_trade[resource]--;
         update_trade_menu();
     });
