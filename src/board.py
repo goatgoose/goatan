@@ -4,7 +4,7 @@ from typing import Dict, Optional, Set, List
 from src.util import GameItem
 from src.player import Player
 from src.piece import Settlement, Road, Piece
-from src.resource import ResourceType
+from src.resource import Resource
 
 
 class TileType(Enum):
@@ -105,11 +105,11 @@ class Tile(GameItem):
     @property
     def resource_type(self):
         return {
-            TileType.BRICK: ResourceType.BRICK,
-            TileType.STONE: ResourceType.STONE,
-            TileType.WHEAT: ResourceType.WHEAT,
-            TileType.SHEEP: ResourceType.SHEEP,
-            TileType.WOOD: ResourceType.WOOD,
+            TileType.BRICK: Resource.BRICK,
+            TileType.STONE: Resource.STONE,
+            TileType.WHEAT: Resource.WHEAT,
+            TileType.SHEEP: Resource.SHEEP,
+            TileType.WOOD: Resource.WOOD,
         }.get(self.type)
 
     def serialize(self):
@@ -178,7 +178,7 @@ class Intersection(GameItem):
 
         return False
 
-    def collect(self, resource_number: ResourceNumber = None) -> [ResourceType]:
+    def collect(self, resource_number: ResourceNumber = None) -> [Resource]:
         assert self.settlement is not None
 
         for tile in self.tiles:

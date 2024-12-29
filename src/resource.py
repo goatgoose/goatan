@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class ResourceType(Enum):
+class Resource(Enum):
     BRICK = "brick"
     STONE = "stone"
     WHEAT = "wheat"
