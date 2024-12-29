@@ -454,12 +454,17 @@ function set_active_player(player_id) {
     $("#player-content-" + player_id).addClass("active");
 }
 
-function set_resource_counts(resources) {
-    $("#wood-count").text(resources["wood"]);
-    $("#wheat-count").text(resources["wheat"]);
-    $("#sheep-count").text(resources["sheep"]);
-    $("#brick-count").text(resources["brick"]);
-    $("#stone-count").text(resources["stone"]);
+let resources = {
+    "brick": 0,
+    "sheep": 0,
+    "stone": 0,
+    "wheat": 0,
+    "wood": 0,
+};
+function update_resource_counts() {
+    $(".resource-count").each(function () {
+        $(this).text(resources[$(this).data("resource")]);
+    });
 }
 
 function update_dice(game_state) {
@@ -489,6 +494,32 @@ function update_dice(game_state) {
     }
 }
 
+// resource : count
+// Where count is positive for items giving away and negative for items receiving.
+let proposed_trade = {};
+
+function reset_trade() {
+    update_resource_counts(resources);
+    proposed_trade = {
+        "brick": 0,
+        "sheep": 0,
+        "stone": 0,
+        "wheat": 0,
+        "wood": 0,
+    };
+}
+function update_trade_menu() {
+    $(".resource-count").each(function () {
+        let resource = $(this).data("resource");
+        $(this).html(
+            resources[resource] + ' ' +
+            '<a class="trade-counter trade-increment" style="cursor: pointer">+</a> ' +
+            '<a class="trade-counter trade-decrement" style="cursor: pointer">-</a>' +
+            " (" + proposed_trade[resource] + ")"
+        );
+    });
+}
+
 console.log("game id: " + game_id);
 let user_id = await Cookies.get("user_id");
 console.log(user_id);
@@ -513,8 +544,10 @@ socket.on("game_state", function (event) {
     clear_board();
     draw_board(event);
     set_active_player(event["active_player"]);
-    set_resource_counts(event["players"]["player_map"][player_id]["resources"]);
+    resources = event["players"]["player_map"][player_id]["resources"];
+    update_resource_counts();
     update_dice(event);
+    reset_trade();
 });
 
 $(document).ready(function () {
@@ -523,5 +556,12 @@ $(document).ready(function () {
     });
     $("#roll-button").click(function () {
         socket.emit("roll");
+    });
+
+    $("#new-trade-button").click(function() {
+        update_trade_menu();
+    });
+    $("#cancel-trade-button").click(function() {
+        reset_trade();
     });
 });

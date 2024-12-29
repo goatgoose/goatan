@@ -17,7 +17,7 @@
 
 <div id="ui-container" class="d-flex" style="height: 100vh;">
     <div id="canvas-container" class="flex-grow-1"></div>
-    <div class="bg-white" style="width: 200px;">
+    <div class="bg-white" style="width: 250px;">
         <a href="/" class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
             <span class="fs-5 fw-bold">Goatan</span>
         </a>
@@ -40,27 +40,27 @@
             <div class="row justify-content-md-center">
                 <div class="col">
                     <img src="/static/images/assets/wood-icon.png" class="resource-icon float-start">
-                    <p id="wood-count">0</p>
+                    <p class="resource-count" id="wood-count" data-resource="wood">0</p>
                 </div>
                 <div class="col">
                     <img src="/static/images/assets/wheat-icon.png" class="resource-icon float-start">
-                    <p id="wheat-count">0</p>
+                    <p class="resource-count" id="wheat-count" data-resource="wheat">0</p>
                 </div>
             </div>
             <div class="row justify-content-md-center">
                 <div class="col">
                     <img src="/static/images/assets/sheep-icon.png" class="resource-icon float-start">
-                    <p id="sheep-count">0</p>
+                    <p class="resource-count" id="sheep-count" data-resource="sheep">0</p>
                 </div>
                 <div class="col">
                     <img src="/static/images/assets/brick-icon.png" class="resource-icon float-start">
-                    <p id="brick-count">0</p>
+                    <p class="resource-count" id="brick-count" data-resource="brick">0</p>
                 </div>
             </div>
             <div class="row justify-content-md-center">
                 <div class="col">
                     <img src="/static/images/assets/stone-icon.png" class="resource-icon float-start">
-                    <p id="stone-count">0</p>
+                    <p class="resource-count" id="stone-count" data-resource="stone">0</p>
                 </div>
             </div>
         </div>
@@ -69,15 +69,26 @@
         <div class="container">
             <div class="dice-holder row justify-content-md-center">
                 <div class="col">
-                    <img src="/static/images/assets/die-2.png" class="die img-fluid w-100" id="die-1">
+                    <img class="die img-fluid" id="die-1">
                 </div>
                 <div class="col">
-                    <img src="/static/images/assets/die-5.png" class="die img-fluid w-100" id="die-2">
+                    <img class="die img-fluid" id="die-2">
                 </div>
             </div>
             <div class="row justify-content-md-center">
                 <div class="col">
                     <button class="btn btn-primary btn-lg btn-block" id="roll-button" type="button">Roll</button>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="col">
+                    <button class="btn btn-primary btn-sm btn-block" id="new-trade-button" type="button">New trade</button>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="col">
+                    <button class="btn btn-danger btn-sm btn-block" id="cancel-trade-button" type="button">Cancel</button>
+                    <button class="btn btn-success btn-sm btn-block" id="propose-trade-button" type="button">Propose</button>
                 </div>
             </div>
             <br>
