@@ -495,7 +495,7 @@ function update_resource_counts() {
 }
 
 // resource : count
-// Where count is positive for items giving away and negative for items receiving.
+// Where count is positive for items receiving and negative for items giving away.
 let proposed_trade = {};
 
 function reset_trade(show_new_trade_button) {
