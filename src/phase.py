@@ -395,3 +395,49 @@ class Placement(GamePhase):
         return "placement"
 
 
+class Finished(GamePhase):
+    def __init__(self, board: Board, players: PlayerManager):
+        super().__init__(board, players)
+
+    def _piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
+        return False
+
+    def _piece_placed(self, location_id: str, piece: Piece):
+        raise error.InvalidState()
+
+    def end_turn(self):
+        raise error.InvalidAction("Turn cannot be ended in finished phase")
+
+    @property
+    def finished(self):
+        return False
+
+    def roll(self):
+        raise error.InvalidAction("No rolling during finished phase")
+
+    @property
+    def roll_result(self) -> Optional[int]:
+        return None
+
+    @property
+    def expecting_roll(self) -> bool:
+        return False
+
+    def bank_trade(self, transaction: Transaction):
+        raise error.InvalidAction("No trading during finished phase")
+
+    def serialize_bank_trades(self) -> Dict[str, List[Dict[str, int]]]:
+        return {player.id: [] for player in self._players}
+
+    def player_trade(self, transaction: Transaction, player: Player):
+        raise error.InvalidAction("No trading during finished phase")
+
+    def serialize_hints(self):
+        return {
+            "intersections": {},
+            "edges": {},
+        }
+
+    @staticmethod
+    def name():
+        return "finished"

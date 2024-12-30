@@ -80,6 +80,7 @@ class Goatan(GameItem):
         self.phases = [
             phase.Placement(self.board, self.players),
             phase.Game(self.board, self.players, self.win_condition),
+            phase.Finished(self.board, self.players),
         ]
         self.phase = self.phases.pop(0)
 
@@ -93,10 +94,7 @@ class Goatan(GameItem):
             raise error.InvalidAction(f"{player.id} is not the active player")
 
         self.phase.end_turn()
-        if self.phase.finished:
-            self.phase = self.phases.pop(0)
-
-        self.emit_event(event.GameState(self))
+        self._synchronize_game_state()
 
     def place(self, player: Player, piece_type: PieceType, location_id: str):
         print(f"place {piece_type} for {player.id} on id {location_id}")
@@ -113,7 +111,7 @@ class Goatan(GameItem):
             raise error.InvalidAction(f"Invalid piece type {piece_type}")
 
         self.phase.place_piece(piece, location_id)
-        self.emit_event(event.GameState(self))
+        self._synchronize_game_state()
 
     def roll(self, player: Player):
         print(f"roll for {player.id}")
@@ -122,7 +120,7 @@ class Goatan(GameItem):
             raise error.InvalidAction(f"{player.id} is not the active player")
 
         self.phase.roll()
-        self.emit_event(event.GameState(self))
+        self._synchronize_game_state()
 
     def bank_trade(self, player: Player, transaction: Transaction):
         print(f"bank trade for {player.id}")
@@ -131,6 +129,11 @@ class Goatan(GameItem):
             raise error.InvalidAction(f"{player.id} is not the active player")
 
         self.phase.bank_trade(transaction)
+        self._synchronize_game_state()
+
+    def _synchronize_game_state(self):
+        if self.phase.finished:
+            self.phase = self.phases.pop(0)
         self.emit_event(event.GameState(self))
 
     def serialize(self):
@@ -143,4 +146,5 @@ class Goatan(GameItem):
             "expecting_roll": self.phase.expecting_roll,
             "phase": self.phase.name(),
             "bank_trades": self.phase.serialize_bank_trades(),
+            "victor": victor.serialize() if (victor := self.win_condition.victor(self.board)) is not None else None
         }

@@ -614,6 +614,12 @@ socket.on("game_state", function (event) {
     }
 
     update_bank_trades(event);
+
+    if (event["victor"] !== null) {
+        $("#player-content-" + event["victor"]["id"] + " strong").text(
+            event["victor"]["name"] + " (winner)"
+        )
+    }
 });
 
 $(document).ready(function () {
