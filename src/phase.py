@@ -396,8 +396,9 @@ class Placement(GamePhase):
 
 
 class Finished(GamePhase):
-    def __init__(self, board: Board, players: PlayerManager):
+    def __init__(self, board: Board, players: PlayerManager, win_condition: victory.WinCondition):
         super().__init__(board, players)
+        self.win_condition = win_condition
 
     def _piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
         return False
@@ -441,3 +442,7 @@ class Finished(GamePhase):
     @staticmethod
     def name():
         return "finished"
+
+    @property
+    def active_player(self) -> Player:
+        return self.win_condition.victor(self._board)

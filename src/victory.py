@@ -6,7 +6,7 @@ from src.player import Player
 
 class WinCondition(ABC):
     @abstractmethod
-    def victor(self, board: Board) -> Player:
+    def victor(self, board: Board) -> Optional[Player]:
         pass
 
 

@@ -80,7 +80,7 @@ class Goatan(GameItem):
         self.phases = [
             phase.Placement(self.board, self.players),
             phase.Game(self.board, self.players, self.win_condition),
-            phase.Finished(self.board, self.players),
+            phase.Finished(self.board, self.players, self.win_condition),
         ]
         self.phase = self.phases.pop(0)
 
