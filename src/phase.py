@@ -8,6 +8,7 @@ from src import error
 from src.dice import D6
 from src.resource import Transaction
 from src.market import Bank, Trade
+from src import victory
 
 
 class GamePhase(ABC):
@@ -82,8 +83,9 @@ class GamePhase(ABC):
 
 
 class Game(GamePhase):
-    def __init__(self, board: Board, players: PlayerManager):
+    def __init__(self, board: Board, players: PlayerManager, win_condition: victory.WinCondition):
         super().__init__(board, players)
+        self.win_condition = win_condition
 
         self._roll = None
         self._bank = Bank()
@@ -149,7 +151,7 @@ class Game(GamePhase):
 
     @property
     def finished(self):
-        return False
+        return self.win_condition.victor(self._board) is not None
 
     def roll(self):
         if self._roll is not None:

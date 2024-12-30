@@ -15,6 +15,7 @@ from src import error
 from src import event
 from src.piece import PieceType, House, Road
 from src.resource import Transaction
+from src import victory
 
 
 class GameManager:
@@ -45,8 +46,9 @@ class Goatan(GameItem):
         self.state = GameState.LOBBY
 
         self.board = None
-        self.phases = [phase.Placement, phase.Game]
+        self.phases = []
         self.phase: Optional[phase.GamePhase] = None
+        self.win_condition = victory.VictoryPoint(5)
 
     @staticmethod
     def _generate_id():
@@ -75,7 +77,11 @@ class Goatan(GameItem):
 
         self.state = GameState.PLACEMENT
         self.players.finalize()
-        self.phase = self.phases.pop(0)(self.board, self.players)
+        self.phases = [
+            phase.Placement(self.board, self.players),
+            phase.Game(self.board, self.players, self.win_condition),
+        ]
+        self.phase = self.phases.pop(0)
 
     def end_turn(self, player: Player):
         print(f"end turn for {player.id}")
@@ -88,7 +94,7 @@ class Goatan(GameItem):
 
         self.phase.end_turn()
         if self.phase.finished:
-            self.phase = self.phases.pop(0)(self.board, self.players)
+            self.phase = self.phases.pop(0)
 
         self.emit_event(event.GameState(self))
 
