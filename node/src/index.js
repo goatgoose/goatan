@@ -538,10 +538,24 @@ function update_trade_menu() {
     $("#new-trade-button").css("visibility", "hidden");
     $("#trade-menu").css("visibility", "visible");
 
-    if (Object.values(proposed_trade).reduce((a, b) => a + b, 0) === 0) {
-        $("#propose-trade-button").prop("disabled", true);
+    let trade_is_empty = true;
+    for (let resource in proposed_trade) {
+        if (proposed_trade[resource] !== 0) {
+            trade_is_empty = false;
+            break;
+        }
+    }
+    $("#propose-trade-button").prop("disabled", trade_is_empty);
+
+    let serialized_trade = JSON.stringify(proposed_trade, Object.keys(proposed_trade).sort());
+    console.log("bank trades:");
+    console.log(bank_trades);
+    console.log("serialized trade:");
+    console.log(serialized_trade);
+    if (!bank_trades.has(serialized_trade)) {
+        $("#bank-trade-button").prop("disabled", true);
     } else {
-        $("#propose-trade-button").prop("disabled", false);
+        $("#bank-trade-button").prop("disabled", false);
     }
 
     $(".trade-increment").click(function () {
@@ -558,6 +572,15 @@ function update_trade_menu() {
         proposed_trade[resource]--;
         update_trade_menu();
     });
+}
+
+let bank_trades = new Set();
+function update_bank_trades(game_state) {
+    bank_trades = new Set();
+    let player_bank_trades = game_state["bank_trades"][player_id];
+    for (let bank_trade of player_bank_trades) {
+        bank_trades.add(JSON.stringify(bank_trade, Object.keys(bank_trade).sort()));
+    }
 }
 
 console.log("game id: " + game_id);
@@ -593,6 +616,8 @@ socket.on("game_state", function (event) {
     } else {
         reset_trade(false);
     }
+
+    update_bank_trades(event);
 });
 
 $(document).ready(function () {
@@ -608,5 +633,8 @@ $(document).ready(function () {
     });
     $("#cancel-trade-button").click(function() {
         reset_trade(true);
+    });
+    $("#bank-trade-button").click(function() {
+        socket.emit("bank_trade", proposed_trade);
     });
 });

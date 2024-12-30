@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Dict, Self
 from abc import ABC, abstractmethod
+import json
 
 
 class Resource(Enum):
@@ -15,11 +16,27 @@ class Transaction:
     def __init__(self, resources: Dict[Resource, int]):
         self.resources = resources
 
+        for resource in Resource:
+            if resource not in resources:
+                self.resources[resource] = 0
+
     def inverse(self) -> Self:
         resources = self.resources.copy()
         for resource in resources:
             resources[resource] *= -1
         return Transaction(resources)
+
+    def __hash__(self):
+        return hash(json.dumps(self.serialize(), sort_keys=True))
+
+    def __eq__(self, other):
+        return hash(self) == hash(other)
+
+    def serialize(self) -> Dict[str, int]:
+        return {
+            resource.value: amount
+            for resource, amount in self.resources.items()
+        }
 
 
 class ResourceHaver:

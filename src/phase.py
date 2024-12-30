@@ -7,6 +7,7 @@ from src.board import Board, ResourceNumber
 from src import error
 from src.dice import D6
 from src.resource import Transaction
+from src.market import Bank, Trade
 
 
 class GamePhase(ABC):
@@ -59,6 +60,18 @@ class GamePhase(ABC):
         pass
 
     @abstractmethod
+    def bank_trade(self, transaction: Transaction):
+        pass
+
+    @abstractmethod
+    def serialize_bank_trades(self) -> Dict[str, List[Dict[str, int]]]:
+        pass
+
+    @abstractmethod
+    def player_trade(self, transaction: Transaction, player: Player):
+        pass
+
+    @abstractmethod
     def serialize_hints(self):
         pass
 
@@ -73,6 +86,7 @@ class Game(GamePhase):
         super().__init__(board, players)
 
         self._roll = None
+        self._bank = Bank()
 
     def _piece_is_placeable(self, location_id: str, piece_type: PieceType) -> bool:
         if self._roll is None:
@@ -159,6 +173,22 @@ class Game(GamePhase):
     @property
     def expecting_roll(self) -> bool:
         return self._roll is None
+
+    def bank_trade(self, transaction: Transaction):
+        if not transaction in self._bank.available_transactions(self._board, self.active_player):
+            raise error.InvalidAction("Invalid transaction")
+
+        Trade(transaction).execute(self.active_player, self._bank)
+
+    def serialize_bank_trades(self) -> Dict[str, List[Dict[str, int]]]:
+        return {
+            player.id: [
+                transaction.serialize() for transaction in self._bank.available_transactions(self._board, player)
+            ] for player in self._players
+        }
+
+    def player_trade(self, transaction: Transaction, player: Player):
+        raise error.InvalidAction("Not implemented")
 
     def _placeable_settlements(self):
         for intersection in self._board.intersections.values():
@@ -320,6 +350,15 @@ class Placement(GamePhase):
     @property
     def expecting_roll(self) -> bool:
         return False
+
+    def bank_trade(self, transaction: Transaction):
+        raise error.InvalidAction("No trading during placement phase")
+
+    def serialize_bank_trades(self) -> Dict[str, List[Dict[str, int]]]:
+        return {player.id: [] for player in self._players}
+
+    def player_trade(self, transaction: Transaction, player: Player):
+        raise error.InvalidAction("No trading during placement phase")
 
     def _placeable_settlements(self):
         if not self._current_turn.placing_house:

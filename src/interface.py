@@ -118,6 +118,14 @@ class GoatanNamespace(AuthenticatedNamespace):
         except error.InvalidAction as e:
             print(e.message())
 
+    def on_bank_trade(self, _dict):
+        auth = self.get_auth(request.sid)
+        bank_trade = event.BankTrade.deserialize(_dict)
+        try:
+            auth.game.bank_trade(auth.player, bank_trade.transaction)
+        except error.InvalidAction as e:
+            print(e.message())
+
 
 class LobbyNamespace(AuthenticatedNamespace):
     def __init__(self, games: GameManager):

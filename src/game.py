@@ -14,6 +14,7 @@ from src import phase
 from src import error
 from src import event
 from src.piece import PieceType, House, Road
+from src.resource import Transaction
 
 
 class GameManager:
@@ -117,6 +118,15 @@ class Goatan(GameItem):
         self.phase.roll()
         self.emit_event(event.GameState(self))
 
+    def bank_trade(self, player: Player, transaction: Transaction):
+        print(f"bank trade for {player.id}")
+
+        if self.phase.active_player != player:
+            raise error.InvalidAction(f"{player.id} is not the active player")
+
+        self.phase.bank_trade(transaction)
+        self.emit_event(event.GameState(self))
+
     def serialize(self):
         return {
             "board": self.board.serialize(),
@@ -126,4 +136,5 @@ class Goatan(GameItem):
             "roll": self.phase.roll_result,
             "expecting_roll": self.phase.expecting_roll,
             "phase": self.phase.name(),
+            "bank_trades": self.phase.serialize_bank_trades(),
         }

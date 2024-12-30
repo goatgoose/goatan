@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from src.player import Player
 from src.piece import PieceType
 from src.util import GameItem
+from src.resource import Transaction, Resource
 
 
 class Event(ABC):
@@ -64,3 +65,17 @@ class Place(Receivable):
             PieceType(_dict["piece_type"]),
             _dict["item"],
         )
+
+
+class BankTrade(Receivable):
+    def __init__(self, transaction: Transaction):
+        self.transaction = transaction
+
+    @staticmethod
+    def deserialize(_dict: dict):
+        transaction_dict = {Resource(resource_str): value for resource_str, value in _dict.items()}
+        return BankTrade(Transaction(transaction_dict))
+
+    @property
+    def name(self) -> str:
+        return "bank_trade"
