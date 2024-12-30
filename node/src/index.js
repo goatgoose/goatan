@@ -548,10 +548,6 @@ function update_trade_menu() {
     $("#propose-trade-button").prop("disabled", trade_is_empty);
 
     let serialized_trade = JSON.stringify(proposed_trade, Object.keys(proposed_trade).sort());
-    console.log("bank trades:");
-    console.log(bank_trades);
-    console.log("serialized trade:");
-    console.log(serialized_trade);
     if (!bank_trades.has(serialized_trade)) {
         $("#bank-trade-button").prop("disabled", true);
     } else {
